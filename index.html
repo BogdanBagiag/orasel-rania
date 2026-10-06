@@ -621,6 +621,7 @@ function onUpdate(time, delta) {
    ============================================================ */
 const posCache = {}; let hb = null; const dbg = { s: 0, r: 0 };
 let sb = null, chan = null, netOk = false, lastSent = { x: -999, y: -999 }, lastSentT = 0, wasMoving = false, lastChatT = 0;
+window.addEventListener('pagehide', () => { try { if (chan) chan.untrack(); if (sb && chan) sb.removeChannel(chan); } catch (e) {} });
 function myPresence() { return { n: S.name, a: S.av, p: S.pet || '' }; }
 function setNet(ok) { netOk = ok; $('#dot').className = ok ? 'ok' : 'bad'; $('#dot').title = ok ? t('online') : t('offline'); }
 function connect() {
@@ -639,7 +640,7 @@ function connect() {
         if (status === 'SUBSCRIBED') { setNet(true); try { await chan.track(myPresence()); } catch (e) {} sendPos(true); }
         else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') { setNet(false); }
       });
-  clearInterval(hb); hb = setInterval(() => { if (session && netOk) sendPos(); const e = $('#dbg'); if (e) e.textContent = '↑' + dbg.s + ' ↓' + dbg.r + ' ' + Object.keys(session ? session.remotes : {}).length + 'p'; }, 1500);
+  clearInterval(hb); hb = setInterval(() => { if (session && netOk) { sendPos(); onSync(); } const e = $('#dbg'); if (e) e.textContent = '↑' + dbg.s + ' ↓' + dbg.r + ' ' + Object.keys(session ? session.remotes : {}).length + 'p'; }, 1500);
   setTimeout(() => { if (session && !netOk) toast(t('offline')); }, 7000);
 }
 function disconnect() {
@@ -665,7 +666,8 @@ function onSync() {
       setPet(r, pet);
     }
   });
-  Object.keys(session.remotes).forEach(id => { if (!st[id]) { destroyPlayer(session.remotes[id]); delete session.remotes[id]; } });
+  const nowT = performance.now();
+  Object.keys(session.remotes).forEach(id => { const rm = session.remotes[id]; if (st[id]) { rm.gone = 0; } else { if (!rm.gone) rm.gone = nowT; if (nowT - rm.gone > 6000) { destroyPlayer(rm); delete session.remotes[id]; } } });
 }
 function onPos(d) {
   if (!session || !d) return; dbg.r++;
