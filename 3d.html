@@ -154,7 +154,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text}
 <!-- HUD -->
 <div id="hud" style="display:none">
   <div id="topbar">
-    <div class="pill"><span id="dot"></span><span id="roomTxt"></span><span>👥 <b id="cnt">1</b></span></div>
+    <div class="pill"><span id="dot"></span><span id="roomTxt"></span><span>👥 <b id="cnt">1</b></span><span id="dbg" style="font-size:11px;opacity:.6"></span></div>
     <div class="hbtns">
       <button class="btn sm" id="btnLang">RO</button>
       <button class="btn sm" id="btnVoice">🔊</button>
@@ -230,6 +230,7 @@ const rid = () => Math.random().toString(36).slice(2, 10);
 const DEF = { name:'', av:{ sk:SKINS[1], hc:HAIRS[1], hs:2, sh:SHIRTS[0], ac:1 }, lang:(navigator.language||'ro').toLowerCase().startsWith('ro')?'ro':'en', voice:true, room:'', pet:'', id:rid(), hideChat:false };
 let S = Object.assign({}, DEF);
 try { const raw = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); if (raw) S = Object.assign({}, DEF, raw, { av: Object.assign({}, DEF.av, raw.av || {}) }); } catch (e) {}
+S.id = rid();   // ID nou la fiecare deschidere, ca două file din același browser să fie jucători diferiți
 function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
 const t = k => (TX[S.lang] && TX[S.lang][k] != null) ? TX[S.lang][k] : (TX.ro[k] != null ? TX.ro[k] : k);
 const $ = s => document.querySelector(s);
@@ -774,6 +775,7 @@ function avatarSnapshot() {
 /* ============================================================
    REȚEA – Supabase Realtime (fără tabele, fără date salvate)
    ============================================================ */
+const posCache = {}; let hb = null; const dbg = { s: 0, r: 0 };
 let sb = null, chan = null, netOk = false, lastSent = { x: -999, z: -999, h: 0 }, lastSentT = 0, wasMoving = false, lastChatT = 0;
 function myPresence() { return { n: S.name, a: S.av, p: S.pet || '' }; }
 function setNet(ok) { netOk = ok; $('#dot').className = ok ? 'ok' : 'bad'; $('#dot').title = ok ? t('online') : t('offline'); }
@@ -793,11 +795,12 @@ function connect() {
         if (status === 'SUBSCRIBED') { setNet(true); try { await chan.track(myPresence()); } catch (e) {} sendPos(true); }
         else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') { setNet(false); }
       });
+  clearInterval(hb); hb = setInterval(() => { if (session && netOk) sendPos(); const e = $('#dbg'); if (e) e.textContent = '↑' + dbg.s + ' ↓' + dbg.r + ' ' + Object.keys(session ? session.remotes : {}).length + 'p'; }, 1500);
   setTimeout(() => { if (session && !netOk) toast(t('offline')); }, 7000);
 }
 function disconnect() {
   try { if (sb && chan) sb.removeChannel(chan); } catch (e) {}
-  chan = null; setNet(false);
+  chan = null; clearInterval(hb); for (const k in posCache) delete posCache[k]; setNet(false);
 }
 function onSync() {
   if (!session || !chan) return;
@@ -811,7 +814,7 @@ function onSync() {
     const m = st[id][st[id].length - 1] || {};
     const av = cleanAv(m.a), nm = cleanText(m.n, 16) || '???', pet = cleanPet(m.p);
     let r = session.remotes[id];
-    if (!r) { r = makePlayer(id, nm, av, pet, 0, 12, 0); r.shown = false; session.remotes[id] = r; }
+    if (!r) { r = makePlayer(id, nm, av, pet, 0, 12, 0); r.shown = false; session.remotes[id] = r; if (posCache[id]) { const pc = posCache[id]; delete posCache[id]; onPos(pc); } sendPos(true); }
     else {
       if (JSON.stringify(r.av) !== JSON.stringify(av)) setAvatar(r, av);
       if (r.name !== nm) { r.name = nm; r.label.set(nm); }
@@ -821,14 +824,14 @@ function onSync() {
   Object.keys(session.remotes).forEach(id => { if (!st[id]) { destroyPlayer(session.remotes[id]); delete session.remotes[id]; } });
 }
 function onPos(d) {
-  if (!session || !d) return;
-  const r = session.remotes[d.i]; if (!r) return;
+  if (!session || !d) return; dbg.r++;
+  const r = session.remotes[d.i]; if (!r) { if (d.i) posCache[d.i] = d; return; }
   const x = +d.x, z = +d.z, h = +d.r; if (!isFinite(x) || !isFinite(z) || !isFinite(h)) return;
   r.tx = Math.max(-80, Math.min(80, x)); r.tz = Math.max(-40, Math.min(70, z)); r.th = h;
   if (!r.shown) { r.x = r.tx; r.z = r.tz; r.h = r.th; r.shown = true; if (r.petG) { r.petX = r.x - 1.6; r.petZ = r.z; } }
 }
 function sendPos(force) {
-  if (!chan || !netOk || !session) return;
+  if (!chan || !netOk || !session) return; dbg.s++;
   const m = session.me;
   chan.send({ type: 'broadcast', event: 'p', payload: { i: S.id, x: +m.x.toFixed(2), z: +m.z.toFixed(2), r: +m.h.toFixed(2) } });
   lastSent = { x: m.x, z: m.z, h: m.h }; lastSentT = performance.now();
