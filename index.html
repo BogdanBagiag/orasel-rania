@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#7ad3c0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rania">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Orășelul Rania</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -116,6 +122,18 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text}
 .conf{position:fixed;top:-40px;font-size:30px;z-index:90;pointer-events:none;animation:fall 1.6s ease-in forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.9}}
 @media(prefers-reduced-motion:reduce){.conf{display:none}}
+.xo-head{display:flex;gap:8px;margin:6px 0}
+.xo-who{flex:1;border:3px solid var(--ink);border-radius:16px;padding:6px 8px;text-align:center;font-weight:700;background:#fff;font-size:15px;line-height:1.25}
+.xo-who.on{background:var(--sun)}
+.xo-who b{display:block;font-size:26px}
+.xo-status{text-align:center;font-weight:700;font-size:19px;min-height:30px;margin:6px 0}
+.xo-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:330px;margin:6px auto}
+.xo-cell{aspect-ratio:1;border:3px solid var(--ink);border-radius:18px;background:#fff;font-family:inherit;font-weight:700;font-size:clamp(44px,14vw,70px);line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 4px 0 var(--ink);color:var(--ink)}
+.xo-cell:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.xo-cell.x{color:#ff5c6c}.xo-cell.o{color:#2a9df4}.xo-cell.win{background:#9be39b}
+.xo-cell:disabled{cursor:default}
+.peerlist{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.peerlist .btn{font-size:21px;text-align:left}
 </style>
 </head>
 <body>
@@ -148,6 +166,8 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text}
     </div>
     <div class="err" id="menuErr"></div>
     <button class="btn go" id="play"></button>
+    <div class="row" style="justify-content:center;margin-top:12px"><button class="btn sky sm" id="btnInstall" style="display:none"></button></div>
+    <div class="help" id="iosHint" style="display:none;text-align:center;margin-top:8px"></div>
   </div>
 </div>
 
@@ -207,7 +227,7 @@ const TX = {
   base:'Blat', icing:'Glazură', tops:'Decor', undo:'↩ Înapoi', done:'Gata ✔', tapCake:'Atinge prăjitura ca să pui decor!', cakeReady:'Prăjitura ta e gata! 🎂', another:'Încă una', challenge:'Provocare', putOn:'Pune pe prăjitură',
   hopTitle:'Șotron', hop1:'Atinge numerele în ordine, de la 1 la 10!', hop2:'Sari din 2 în 2!', hop5:'Sari din 5 în 5!', hopDown:'Numără invers, de la 10 la 1!', hopOdd:'Sari doar pe numerele impare, în ordine!', hopWin:'Ai terminat șotronul! 🎉', hopWrong:'Hopa! Caută numărul următor.', hopAgain:'Încă o dată',
   petTitle:'Magazin de animăluțe', petPick:'Alege-ți un prieten!', dog:'Cățel', cat:'Pisică', horse:'Cal', fish:'Pește', nopet:'Fără animal', petGot:'Ai un nou prieten! 🥰', petNone:'Animalul a rămas la magazin.',
-  menuBack:'Schimbă avatarul', voice:'Voce' },
+  menuBack:'Schimbă avatarul', voice:'Voce', games:'Sala de jocuri', gamesPick:'Alege un joc', soonShort:'În curând', xo:'X și 0', xoNeedNet:'Ai nevoie de internet și de un prieten din același oraș (același cod de cameră).', xoWait:'Aștept un prieten în Sala de jocuri…', xoHint:'Roagă un prieten să intre în Sala de jocuri 🎲 din același oraș.', xoPick:'Alege cu cine joci:', xoInviting:'Aștept răspunsul lui', xoNoAnswer:'Nu a răspuns. Încearcă din nou!', xoYou:'Tu', xoYourTurn:'E rândul tău!', xoTheirTurn:'Rândul lui', xoWin:'Ai câștigat! 🎉', xoLose:'a câștigat! 👏', xoDraw:'Egalitate! 🤝', xoLeft:'Prietenul a plecat 👋', xoAgain:'Încă o rundă', xoWaitAgain:'Aștept prietenul…', xoExit:'Înapoi', install:'Instalează jocul pe telefon', iosHint:'Pe iPhone/iPad: apasă Partajare ⬆️, apoi „Adaugă pe ecranul principal”.' },
  en:{ title:'Rania Town', sub:'Explore the town and play with your friends!', name:'Your name', skin:'Skin', style:'Hairstyle', hair:'Hair color', shirt:'Shirt', acc:'Accessory',
   styles:['Short','Long','Pigtails','Bun'], accs:['None','Bow','Glasses'], room:'Room code', roomPh:'e.g. RANIA2026', roomHelp:'Ask a parent for the code. Only friends with the same code see each other.',
   play:"Let's go! 🚀", badRoom:'Type a room code: 3-16 letters or numbers.', enter:'Enter', soon:'Coming soon! 🚧', chat:'Chat', send:'Send', typeHere:'Type a message…',
@@ -218,7 +238,7 @@ const TX = {
   base:'Cake', icing:'Icing', tops:'Toppings', undo:'↩ Undo', done:'Done ✔', tapCake:'Tap the cake to add toppings!', cakeReady:'Your cake is ready! 🎂', another:'Another one', challenge:'Challenge', putOn:'Put on the cake',
   hopTitle:'Hopscotch', hop1:'Tap the numbers in order, 1 to 10!', hop2:'Hop by 2s!', hop5:'Hop by 5s!', hopDown:'Count backwards from 10 to 1!', hopOdd:'Hop on the odd numbers, in order!', hopWin:'You finished hopscotch! 🎉', hopWrong:'Oops! Find the next number.', hopAgain:'Again',
   petTitle:'Pet shop', petPick:'Choose a friend!', dog:'Puppy', cat:'Kitten', horse:'Horse', fish:'Fish', nopet:'No pet', petGot:'You have a new friend! 🥰', petNone:'Your pet stayed at the shop.',
-  menuBack:'Change avatar', voice:'Voice' }
+  menuBack:'Change avatar', voice:'Voice', games:'Game room', gamesPick:'Pick a game', soonShort:'Coming soon', xo:'Tic-tac-toe', xoNeedNet:'You need internet and a friend in the same town (same room code).', xoWait:'Waiting for a friend in the Game room…', xoHint:'Ask a friend to enter the Game room 🎲 in the same town.', xoPick:'Choose who to play with:', xoInviting:'Waiting for', xoNoAnswer:'No answer. Try again!', xoYou:'You', xoYourTurn:'Your turn!', xoTheirTurn:'Turn of', xoWin:'You won! 🎉', xoLose:'won! 👏', xoDraw:'Draw! 🤝', xoLeft:'Your friend left 👋', xoAgain:'Play again', xoWaitAgain:'Waiting for your friend…', xoExit:'Back', install:'Install the game', iosHint:'On iPhone/iPad: tap Share ⬆️, then “Add to Home Screen”.' }
 };
 const NAMES = {
  ro:['Pisicuța Veselă','Iepurașul Vesel','Ursulețul Curajos','Delfinul Isteț','Fluturașul Zâmbitor','Vulpița Șugubeață','Cățelușul Jucăuș','Puiul Curios','Broscuța Săltăreață','Pinguinul Prietenos','Gărgărița Norocoasă','Leul Blând'],
@@ -306,7 +326,7 @@ let scene = null, session = null, modalOpen = false, uiReady = false;
     { id:'cafe',    x:60,   emoji:'☕', roof:0xff7f6b, wall:0xffe3d6, key:'cafe' },
     { id:'bakery',  x:380,  emoji:'🧁', roof:0xff9ec4, wall:0xffe6f0, key:'bakery' },
     { id:'pets',    x:700,  emoji:'🐾', roof:0x6ec1ff, wall:0xe2f3ff, key:'pets' },
-    { id:'toys',    x:1020, emoji:'🧸', roof:0xffd35c, wall:0xfff3c9, key:'toys', locked:true },
+    { id:'toys',    x:1020, emoji:'🎲', roof:0xffd35c, wall:0xfff3c9, key:'games' },
     { id:'library', x:1340, emoji:'📚', roof:0xb28dff, wall:0xeee5ff, key:'library', locked:true }
   ];
   B.forEach(b => {
@@ -635,6 +655,7 @@ function connect() {
       .on('presence', { event: 'join' }, ({ key }) => { if (key !== S.id) sendPos(true); })
       .on('broadcast', { event: 'p' }, ({ payload }) => onPos(payload))
       .on('broadcast', { event: 'c' }, ({ payload }) => onChat(payload))
+      .on('broadcast', { event: 'g' }, ({ payload }) => onGame(payload))
       .subscribe(async status => {
         if (!session) return;
         if (status === 'SUBSCRIBED') { setNet(true); try { await chan.track(myPresence()); } catch (e) {} sendPos(true); }
@@ -730,7 +751,7 @@ function chips(sel, labels, key) {
   labels.forEach((l, i) => { const b = document.createElement('button'); b.className = 'btn sm' + (S.av[key] === i ? ' on' : ''); b.textContent = l; b.onclick = () => { S.av[key] = i; renderMenu(); }; box.appendChild(b); });
 }
 function renderMenu() {
-  document.documentElement.lang = S.lang;
+  document.documentElement.lang = S.lang; updateInstallUI();
   $('#mTitle').textContent = t('title'); $('#mSub').textContent = t('sub');
   $('#lName').textContent = t('name'); $('#lSkin').textContent = t('skin'); $('#lStyle').textContent = t('style'); $('#lHair').textContent = t('hair'); $('#lShirt').textContent = t('shirt'); $('#lAcc').textContent = t('acc'); $('#lRoom').textContent = t('room');
   $('#inRoom').placeholder = t('roomPh'); $('#roomHelp').textContent = t('roomHelp'); $('#play').textContent = t('play');
@@ -816,9 +837,9 @@ function openLoc(id) {
   if (modalOpen) return;
   modalOpen = true; target = null; pending = null; joy.on = false; $('#enterBtn').style.display = 'none'; nearLoc = null;
   modal.style.display = 'flex'; mbody.innerHTML = ''; mbody.scrollTop = 0;
-  ({ cafe: gCafe, bakery: gBakery, play: gPlay, pets: gPets })[id]();
+  ({ cafe: gCafe, bakery: gBakery, play: gPlay, pets: gPets, toys: gGames })[id]();
 }
-function closeModal() { modalOpen = false; modal.style.display = 'none'; mbody.innerHTML = ''; if ('speechSynthesis' in window) speechSynthesis.cancel(); }
+function closeModal() { gameCleanup(); modalOpen = false; modal.style.display = 'none'; mbody.innerHTML = ''; if ('speechSynthesis' in window) speechSynthesis.cancel(); }
 modal.addEventListener('pointerdown', e => { if (e.target === modal) closeModal(); });
 function head(emoji, title) {
   mbody.insertAdjacentHTML('afterbegin', `<div class="mh"><h2>${emoji} ${title}</h2><button class="btn" id="mx" aria-label="close">✕</button></div>`);
@@ -978,8 +999,160 @@ function gPets() {
 }
 
 /* ============================================================
+   SALA DE JOCURI: X și 0 între doi prieteni (multiplayer)
+   ============================================================ */
+const XO = { on: false, state: 'lobby', timer: null, peers: {}, game: null, inv: null, sig: '' };
+const XO_LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+function gsend(o) { if (chan && netOk) chan.send({ type: 'broadcast', event: 'g', payload: Object.assign({ i: S.id, n: S.name }, o) }); }
+function gameCleanup() {
+  try { if (XO.game && !XO.game.over) gsend({ t: 'leave', to: XO.game.opp, g: XO.game.id }); } catch (e) {}
+  clearInterval(XO.timer); XO.timer = null; XO.on = false; XO.game = null; XO.inv = null; XO.peers = {}; XO.state = 'lobby'; XO.sig = '';
+}
+function gGames() {
+  mbody.innerHTML = `<div class="msg" style="margin:0 0 4px">${t('gamesPick')}</div>
+    <div class="pets"><button class="btn pet" id="goXO">❌⭕<small>${t('xo')}</small></button><button class="btn pet" disabled style="opacity:.45">🧩<small>${t('soonShort')}</small></button></div>`;
+  head('🎲', t('games'));
+  $('#goXO').onclick = xoEnter;
+}
+function xoEnter() {
+  if (!chan || !netOk || !session) {
+    mbody.innerHTML = `<div class="msg" style="margin:10px 0">${t('xoNeedNet')}</div><div class="row" style="justify-content:center"><button class="btn sun" id="xoBack">${t('xoExit')}</button></div>`;
+    head('❌⭕', t('xo')); $('#xoBack').onclick = () => { gGames(); }; return;
+  }
+  XO.on = true; XO.state = 'lobby'; XO.game = null; XO.inv = null; XO.peers = {}; XO.sig = '';
+  clearInterval(XO.timer); XO.timer = setInterval(xoTick, 1500); xoTick(); xoRenderLobby(true);
+}
+function xoTick() {
+  if (!XO.on || !session) return;
+  const now = performance.now();
+  gsend({ t: 'hello', st: XO.game && !XO.game.over ? 'busy' : 'free' });
+  if (XO.game) {
+    gsend({ t: 'ping', to: XO.game.opp, g: XO.game.id });
+    if (!XO.game.over && now - XO.game.seen > 9000) { XO.game.over = true; XO.game.left = true; xoRenderGame(); }
+  } else {
+    if (XO.inv && now - XO.inv.t > 4000) { XO.inv = null; toast(t('xoNoAnswer')); }
+    xoRenderLobby(false);
+  }
+}
+function xoPeers() {
+  const now = performance.now();
+  return Object.keys(XO.peers).filter(id => session.remotes[id] && now - XO.peers[id].t < 4500 && XO.peers[id].st === 'free');
+}
+function xoRenderLobby(force) {
+  if (!XO.on || XO.game) return;
+  const peers = xoPeers(), sig = (XO.inv ? 'i' + XO.inv.to : '') + '|' + peers.join(',');
+  if (!force && sig === XO.sig) return; XO.sig = sig;
+  mbody.innerHTML = '<div id="xoBox"></div>';
+  const box = $('#xoBox');
+  const msg = (txt, cls) => { const d = document.createElement('div'); d.className = 'msg'; if (cls) d.style.fontSize = cls; d.textContent = txt; box.appendChild(d); return d; };
+  if (XO.inv) {
+    const nm = (XO.peers[XO.inv.to] && XO.peers[XO.inv.to].n) || '';
+    msg('⏳ ' + t('xoInviting') + ' ' + nm + '…');
+  } else if (peers.length) {
+    msg(t('xoPick'));
+    const list = document.createElement('div'); list.className = 'peerlist'; box.appendChild(list);
+    peers.forEach(id => { const b = document.createElement('button'); b.className = 'btn sky'; b.textContent = '🙂 ' + XO.peers[id].n; b.onclick = () => xoInvite(id); list.appendChild(b); });
+  } else {
+    msg('⏳ ' + t('xoWait'));
+    const h = msg(t('xoHint'), '15px'); h.style.opacity = .75; h.style.fontWeight = 500;
+  }
+  const row = document.createElement('div'); row.className = 'row'; row.style.cssText = 'justify-content:center;margin-top:10px'; box.appendChild(row);
+  const back = document.createElement('button'); back.className = 'btn'; back.textContent = t('xoExit'); back.onclick = () => { gameCleanup(); gGames(); }; row.appendChild(back);
+  head('❌⭕', t('xo'));
+}
+function xoInvite(id) {
+  if (XO.inv || XO.game) return;
+  const gid = rid(); XO.inv = { to: id, g: gid, t: performance.now() };
+  gsend({ t: 'start', to: id, g: gid }); xoRenderLobby(true);
+}
+function xoNew(id, mySym, opp, oppName) {
+  XO.game = { id, mySym, opp, oppName, board: Array(9).fill(''), turn: 'X', over: false, win: null, line: null, left: false, score: { me: 0, opp: 0, draw: 0 }, myAgain: false, oppAgain: false, seen: performance.now() };
+  XO.inv = null; XO.state = 'game'; xoRenderGame();
+}
+function xoCheck(g) {
+  for (const l of XO_LINES) { const a = l[0], b = l[1], c = l[2]; if (g.board[a] && g.board[a] === g.board[b] && g.board[a] === g.board[c]) { g.win = g.board[a]; g.line = l; g.over = true; if (g.win === g.mySym) { g.score.me++; burst(); } else g.score.opp++; return; } }
+  if (g.board.every(x => x)) { g.win = 'draw'; g.over = true; g.score.draw++; }
+}
+function xoMove(c) {
+  const g = XO.game; if (!g || g.over || g.turn !== g.mySym || g.board[c]) return;
+  g.board[c] = g.mySym; g.turn = g.mySym === 'X' ? 'O' : 'X'; xoCheck(g);
+  gsend({ t: 'move', to: g.opp, g: g.id, c }); xoRenderGame();
+}
+function xoRestart() {
+  const g = XO.game; g.board = Array(9).fill(''); g.turn = 'X'; g.over = false; g.win = null; g.line = null; g.mySym = g.mySym === 'X' ? 'O' : 'X'; g.myAgain = g.oppAgain = false; g.seen = performance.now(); xoRenderGame();
+}
+function xoRenderGame() {
+  const g = XO.game; if (!g || !XO.on) return;
+  mbody.innerHTML = '<div class="xo-head"><div class="xo-who" id="xoMe"></div><div class="xo-who" id="xoOpp"></div></div><div class="xo-status" id="xoSt"></div><div class="xo-board" id="xoBd"></div><div class="row" style="justify-content:center;margin-top:8px" id="xoBtns"></div>';
+  head('❌⭕', t('xo'));
+  const oppSym = g.mySym === 'X' ? 'O' : 'X', myTurn = !g.over && g.turn === g.mySym, me = $('#xoMe'), op = $('#xoOpp');
+  me.classList.toggle('on', myTurn); op.classList.toggle('on', !g.over && !myTurn);
+  me.textContent = t('xoYou') + ' (' + g.mySym + ')'; op.textContent = g.oppName + ' (' + oppSym + ')';
+  [[me, g.score.me], [op, g.score.opp]].forEach(p => { const b = document.createElement('b'); b.textContent = p[1]; p[0].appendChild(b); });
+  let st;
+  if (g.over) { if (g.left) st = t('xoLeft'); else if (g.win === 'draw') st = t('xoDraw'); else if (g.win === g.mySym) st = t('xoWin'); else st = g.oppName + ' ' + t('xoLose'); }
+  else st = myTurn ? t('xoYourTurn') : t('xoTheirTurn') + ' ' + g.oppName + '…';
+  if (g.over && !g.left && g.myAgain) st += '\n' + t('xoWaitAgain');
+  $('#xoSt').textContent = st; $('#xoSt').style.whiteSpace = 'pre-line';
+  const bd = $('#xoBd');
+  for (let c = 0; c < 9; c++) {
+    const b = document.createElement('button'); b.className = 'xo-cell' + (g.board[c] ? ' ' + g.board[c].toLowerCase() : '') + (g.line && g.line.indexOf(c) >= 0 ? ' win' : '');
+    b.textContent = g.board[c]; b.disabled = !myTurn || !!g.board[c]; b.onclick = () => xoMove(c); bd.appendChild(b);
+  }
+  const bt = $('#xoBtns');
+  if (g.over && !g.left && !g.myAgain) { const a = document.createElement('button'); a.className = 'btn go'; a.textContent = '🔁 ' + t('xoAgain'); a.onclick = () => { g.myAgain = true; gsend({ t: 'again', to: g.opp, g: g.id }); if (g.oppAgain) xoRestart(); else xoRenderGame(); }; bt.appendChild(a); }
+  const ex = document.createElement('button'); ex.className = 'btn'; ex.textContent = t('xoExit');
+  ex.onclick = () => { if (!g.over) gsend({ t: 'leave', to: g.opp, g: g.id }); XO.game = null; XO.state = 'lobby'; XO.sig = ''; xoRenderLobby(true); }; bt.appendChild(ex);
+}
+function onGame(d) {
+  if (!XO.on || !session || !d) return;
+  const from = cleanText(d.i, 24); if (!from || from === S.id) return;
+  const nm = (session.remotes[from] && session.remotes[from].name) || cleanText(d.n, 16) || '?', now = performance.now();
+  if (d.t === 'hello') {
+    XO.peers[from] = { n: nm, st: d.st === 'busy' ? 'busy' : 'free', t: now };
+    if (XO.game && XO.game.opp === from) XO.game.seen = now;
+    if (!XO.game) xoRenderLobby(false); return;
+  }
+  if (d.to !== S.id) return;
+  const gid = cleanText(d.g, 24), g = XO.game;
+  if (d.t === 'start') {
+    if (g && !g.over) { gsend({ t: 'busy', to: from, g: gid }); return; }
+    if (XO.inv) { if (XO.inv.to === from && S.id > from) { XO.inv = null; } else return; }
+    gsend({ t: 'ack', to: from, g: gid }); xoNew(gid, 'O', from, nm);
+  } else if (d.t === 'ack') {
+    if (XO.inv && XO.inv.g === gid && XO.inv.to === from) xoNew(gid, 'X', from, nm);
+  } else if (d.t === 'busy') {
+    if (XO.inv && XO.inv.g === gid) { XO.inv = null; toast(t('xoNoAnswer')); xoRenderLobby(true); }
+  } else if (g && g.id === gid && g.opp === from) {
+    g.seen = now;
+    if (d.t === 'move') {
+      const c = d.c | 0, oppSym = g.mySym === 'X' ? 'O' : 'X';
+      if (c >= 0 && c <= 8 && !g.over && g.turn === oppSym && !g.board[c]) { g.board[c] = oppSym; g.turn = g.mySym; xoCheck(g); xoRenderGame(); }
+    } else if (d.t === 'again') { g.oppAgain = true; if (g.myAgain) xoRestart(); }
+    else if (d.t === 'leave') { g.over = true; g.left = true; xoRenderGame(); }
+  }
+}
+
+/* ============================================================
    PORNIRE
    ============================================================ */
+/* ============================================================
+   APLICAȚIE INSTALABILĂ (PWA)
+   ============================================================ */
+let deferredInstall = null;
+const isStandalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function updateInstallUI() {
+  const b = $('#btnInstall'), h = $('#iosHint'); if (!b || !h) return;
+  b.textContent = '📲 ' + t('install'); h.textContent = t('iosHint');
+  b.style.display = (deferredInstall && !isStandalone()) ? 'inline-block' : 'none';
+  h.style.display = (isIOS() && !isStandalone()) ? 'block' : 'none';
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; updateInstallUI(); });
+window.addEventListener('appinstalled', () => { deferredInstall = null; updateInstallUI(); });
+$('#btnInstall').onclick = async () => { if (!deferredInstall) return; deferredInstall.prompt(); try { await deferredInstall.userChoice; } catch (e) {} deferredInstall = null; updateInstallUI(); };
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); }); }
+
 function boot() {
   initMenu(); initHud();
   new Phaser.Game({
