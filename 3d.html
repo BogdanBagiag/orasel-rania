@@ -1981,7 +1981,7 @@ Promise.race([document.fonts && document.fonts.load ? document.fonts.load('600 1
 <script>
 /* AUTO-UPDATE: la fiecare versiune nouă schimb BUILD; jocul se blochează până se actualizează */
 (function () {
-  var BUILD = '2026-10-07.3';
+  var BUILD = '2026-10-07.4';
   if (!/^https?:/.test(location.protocol)) return;
   var shown = false, ro = ((navigator.language || 'ro') + '').toLowerCase().indexOf('ro') === 0;
   var TXT = ro ? { t: 'Avem o versiune nouă! 🎉', p: 'Ca să poți continua să joci, apasă butonul și jocul se actualizează.', b: '🔄 Actualizează acum', w: 'Se actualizează…' }
@@ -2022,6 +2022,50 @@ Promise.race([document.fonts && document.fonts.load ? document.fonts.load('600 1
   setTimeout(check, 1500); setInterval(check, 60000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
   window.addEventListener('online', check); window.addEventListener('focus', check);
+})();
+</script>
+<script>
+/* INSTALL-PROMPT: la prima vizită întreabă dacă vrei jocul instalat pe telefon */
+(function () {
+  var KEY = 'rania_install', ro = ((navigator.language || 'ro') + '').toLowerCase().indexOf('ro') === 0, ev = null, shown = false;
+  var T = ro ? { t: 'Instalează jocul pe telefon!', p: 'Îl găsești apoi pe ecranul principal, ca pe orice aplicație, și se deschide direct în joc.', yes: '📲 Instalează', no: 'Nu acum', ios: 'Apasă butonul Partajează', ios2: 'și alege „Adaugă pe ecranul principal”.', ok: 'Am înțeles' }
+             : { t: 'Install the game on your phone!', p: 'You will find it on your home screen like any other app, and it opens straight into the game.', yes: '📲 Install', no: 'Not now', ios: 'Tap the Share button', ios2: 'then choose “Add to Home Screen”.', ok: 'Got it' };
+  function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  var standalone = function () { return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; };
+  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  function allowed() {
+    if (standalone() || shown || document.getElementById('updOverlay')) return false;
+    var v = get(); if (v === 'done') return false;
+    if (v && !isNaN(+v) && Date.now() - (+v) < 7 * 864e5) return false;       // a spus „nu acum”: mai întreb peste 7 zile
+    return true;
+  }
+  function close(card, val) { set(val); if (card.parentNode) card.parentNode.removeChild(card); }
+  function show(kind) {
+    if (!allowed()) return; shown = true;
+    var c = document.createElement('div'); c.id = 'installCard';
+    c.style.cssText = 'position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:2147483000;max-width:460px;margin:0 auto;background:#fff;border:4px solid #2d2a4a;border-radius:24px;padding:16px 18px;box-shadow:0 10px 34px rgba(45,42,74,.35);font-family:Fredoka,"Baloo 2",system-ui,sans-serif;color:#2d2a4a;text-align:center';
+    var btn = 'font:inherit;font-weight:700;border:0;border-radius:16px;padding:11px 20px;font-size:18px;cursor:pointer;';
+    c.innerHTML = '<div style="font-size:42px;line-height:1">📲</div><div style="font-size:22px;font-weight:700;margin:4px 0">' + T.t + '</div>' +
+      (kind === 'ios' ? '<div style="font-size:17px;line-height:1.35;color:#4a4670;margin-bottom:12px">' + T.ios + ' <span style="font-size:22px">⬆️</span><br>' + T.ios2 + '</div>' +
+        '<button id="instOk" style="' + btn + 'color:#fff;background:#4fb0f0;box-shadow:0 4px 0 #3689bd">' + T.ok + '</button>'
+      : '<div style="font-size:17px;line-height:1.35;color:#4a4670;margin-bottom:12px">' + T.p + '</div>' +
+        '<button id="instYes" style="' + btn + 'color:#fff;background:#ff7f6b;box-shadow:0 4px 0 #d9604d;margin:0 6px 6px">' + T.yes + '</button><button id="instNo" style="' + btn + 'color:#2d2a4a;background:#eef0f7;margin:0 6px 6px">' + T.no + '</button>');
+    document.body.appendChild(c);
+    var g = function (id) { return document.getElementById(id); };
+    if (kind === 'ios') g('instOk').onclick = function () { close(c, 'done'); };
+    else {
+      g('instNo').onclick = function () { close(c, String(Date.now())); };
+      g('instYes').onclick = function () {
+        var e = ev; close(c, 'done'); if (!e) return;
+        try { e.prompt(); if (e.userChoice) e.userChoice.then(function (r) { if (r && r.outcome === 'dismissed') set(String(Date.now())); }, function () {}); } catch (x) {}
+      };
+    }
+  }
+  window.addEventListener('beforeinstallprompt', function (e) { ev = e; setTimeout(function () { show('android'); }, 2200); });
+  window.addEventListener('appinstalled', function () { set('done'); var c = document.getElementById('installCard'); if (c && c.parentNode) c.parentNode.removeChild(c); });
+  if (ios && /^https?:/.test(location.protocol)) setTimeout(function () { show('ios'); }, 3000);
+  window.__raniaInstallDebug = function () { return { ev: !!ev, shown: shown, ios: ios, standalone: standalone() }; };
 })();
 </script>
 </body>
