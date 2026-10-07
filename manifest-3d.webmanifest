@@ -1,0 +1,42 @@
+{
+  "name": "Orășelul Rania 3D",
+  "short_name": "Rania 3D",
+  "description": "Orășelul Rania în 3D: explorează orașul, joacă-te și întâlnește prieteni.",
+  "id": "./3d.html",
+  "start_url": "./3d.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "fullscreen",
+    "standalone"
+  ],
+  "orientation": "any",
+  "background_color": "#8fe3d1",
+  "theme_color": "#7ad3c0",
+  "lang": "ro",
+  "categories": [
+    "games",
+    "kids",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

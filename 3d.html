@@ -134,6 +134,11 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text}
 .xo-cell:disabled{cursor:default}
 .peerlist{display:flex;flex-direction:column;gap:8px;margin:8px 0}
 .peerlist .btn{font-size:21px;text-align:left}
+#eatBtn{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(92px + var(--sab));font-size:22px;padding:12px 22px;display:none;white-space:nowrap}
+#eatBtn:active{transform:translateX(-50%) translateY(3px)}
+.cakes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.cakes .cake{display:flex;flex-direction:column;align-items:center;font-size:40px;line-height:1.1;padding:10px 2px}
+.cakes .cake small{font-size:13px;margin-top:3px;text-align:center}
 </style>
 </head>
 <body>
@@ -183,6 +188,7 @@ input{font-family:inherit;-webkit-user-select:text;user-select:text}
   </div>
   <div id="joy"><div id="knob"></div></div>
   <button class="btn go" id="enterBtn"></button>
+  <button class="btn sun" id="eatBtn"></button>
   <button class="btn" id="btnChat">💬<i id="chatDot"></i></button>
   <div id="chatPanel">
     <div class="ch"><span id="chTitle"></span><button class="btn sm" id="btnHide">🙈</button></div>
@@ -227,7 +233,7 @@ const TX = {
   base:'Blat', icing:'Glazură', tops:'Decor', undo:'↩ Înapoi', done:'Gata ✔', tapCake:'Atinge prăjitura ca să pui decor!', cakeReady:'Prăjitura ta e gata! 🎂', another:'Încă una', challenge:'Provocare', putOn:'Pune pe prăjitură',
   hopTitle:'Șotron', hop1:'Atinge numerele în ordine, de la 1 la 10!', hop2:'Sari din 2 în 2!', hop5:'Sari din 5 în 5!', hopDown:'Numără invers, de la 10 la 1!', hopOdd:'Sari doar pe numerele impare, în ordine!', hopWin:'Ai terminat șotronul! 🎉', hopWrong:'Hopa! Caută numărul următor.', hopAgain:'Încă o dată',
   petTitle:'Magazin de animăluțe', petPick:'Alege-ți un prieten!', dog:'Cățel', cat:'Pisică', horse:'Cal', fish:'Pește', nopet:'Fără animal', petGot:'Ai un nou prieten! 🥰', petNone:'Animalul a rămas la magazin.',
-  menuBack:'Schimbă avatarul', voice:'Voce', games:'Sala de jocuri', gamesPick:'Alege un joc', soonShort:'În curând', xo:'X și 0', xoNeedNet:'Ai nevoie de internet și de un prieten din același oraș (același cod de cameră).', xoWait:'Aștept un prieten în Sala de jocuri…', xoHint:'Roagă un prieten să intre în Sala de jocuri 🎲 din același oraș.', xoPick:'Alege cu cine joci:', xoInviting:'Aștept răspunsul lui', xoNoAnswer:'Nu a răspuns. Încearcă din nou!', xoYou:'Tu', xoYourTurn:'E rândul tău!', xoTheirTurn:'Rândul lui', xoWin:'Ai câștigat! 🎉', xoLose:'a câștigat! 👏', xoDraw:'Egalitate! 🤝', xoLeft:'Prietenul a plecat 👋', xoAgain:'Încă o rundă', xoWaitAgain:'Aștept prietenul…', xoExit:'Înapoi', install:'Instalează jocul pe telefon', iosHint:'Pe iPhone/iPad: apasă Partajare ⬆️, apoi „Adaugă pe ecranul principal”.', hintLook:'Trage cu degetul ca să te uiți în jur 👀', actSlide:'Alunecă pe tobogan', actSee:'Șezi pe balansoar', actSwing:'Șezi în leagăn', getOff:'Coboară', seatBusy:'Locul e ocupat – încearcă altul!' },
+  menuBack:'Schimbă avatarul', voice:'Voce', games:'Sala de jocuri', gamesPick:'Alege un joc', soonShort:'În curând', xo:'X și 0', xoNeedNet:'Ai nevoie de internet și de un prieten din același oraș (același cod de cameră).', xoWait:'Aștept un prieten în Sala de jocuri…', xoHint:'Roagă un prieten să intre în Sala de jocuri 🎲 din același oraș.', xoPick:'Alege cu cine joci:', xoInviting:'Aștept răspunsul lui', xoNoAnswer:'Nu a răspuns. Încearcă din nou!', xoYou:'Tu', xoYourTurn:'E rândul tău!', xoTheirTurn:'Rândul lui', xoWin:'Ai câștigat! 🎉', xoLose:'a câștigat! 👏', xoDraw:'Egalitate! 🤝', xoLeft:'Prietenul a plecat 👋', xoAgain:'Încă o rundă', xoWaitAgain:'Aștept prietenul…', xoExit:'Înapoi', install:'Instalează jocul pe telefon', iosHint:'Pe iPhone/iPad: apasă Partajare ⬆️, apoi „Adaugă pe ecranul principal”.', hintLook:'Trage cu degetul ca să te uiți în jur 👀', actSlide:'Alunecă pe tobogan', actSee:'Șezi pe balansoar', actSwing:'Șezi în leagăn', getOff:'Coboară', seatBusy:'Locul e ocupat – încearcă altul!', actCounter:'Alege o prăjitură', actChair:'Șezi la masă', counterTitle:'Ghișeul cofetăriei', bakerHi:'Bună! Ce prăjitură dorești?', poftim:'Poftim!', cakeGot:'Poftim! Mergi la o masă (înăuntru sau afară) și mănâncă-o 🍽️', eat:'Mănâncă', needCake:'Ia mai întâi o prăjitură de la ghișeu! 🧁', eatDone:'Mmm, ce bună era! 😋', decorate:'Decorează o prăjitură', plateGone:'Mulțumim! Te mai așteptăm 💖', hello:'Bună ziua! 🧁', baker:'Cofetăreasa', cake1:'Felie de tort', cake2:'Brioșă', cake3:'Gogoașă', cake4:'Tartă cu căpșuni', cake5:'Brownie', cake6:'Fursecuri' },
  en:{ title:'Rania Town', sub:'Explore the town and play with your friends!', name:'Your name', skin:'Skin', style:'Hairstyle', hair:'Hair color', shirt:'Shirt', acc:'Accessory',
   styles:['Short','Long','Pigtails','Bun'], accs:['None','Bow','Glasses'], room:'Room code', roomPh:'e.g. RANIA2026', roomHelp:'Ask a parent for the code. Only friends with the same code see each other.',
   play:"Let's go! 🚀", badRoom:'Type a room code: 3-16 letters or numbers.', enter:'Enter', soon:'Coming soon! 🚧', chat:'Chat', send:'Send', typeHere:'Type a message…',
@@ -238,7 +244,7 @@ const TX = {
   base:'Cake', icing:'Icing', tops:'Toppings', undo:'↩ Undo', done:'Done ✔', tapCake:'Tap the cake to add toppings!', cakeReady:'Your cake is ready! 🎂', another:'Another one', challenge:'Challenge', putOn:'Put on the cake',
   hopTitle:'Hopscotch', hop1:'Tap the numbers in order, 1 to 10!', hop2:'Hop by 2s!', hop5:'Hop by 5s!', hopDown:'Count backwards from 10 to 1!', hopOdd:'Hop on the odd numbers, in order!', hopWin:'You finished hopscotch! 🎉', hopWrong:'Oops! Find the next number.', hopAgain:'Again',
   petTitle:'Pet shop', petPick:'Choose a friend!', dog:'Puppy', cat:'Kitten', horse:'Horse', fish:'Fish', nopet:'No pet', petGot:'You have a new friend! 🥰', petNone:'Your pet stayed at the shop.',
-  menuBack:'Change avatar', voice:'Voice', games:'Game room', gamesPick:'Pick a game', soonShort:'Coming soon', xo:'Tic-tac-toe', xoNeedNet:'You need internet and a friend in the same town (same room code).', xoWait:'Waiting for a friend in the Game room…', xoHint:'Ask a friend to enter the Game room 🎲 in the same town.', xoPick:'Choose who to play with:', xoInviting:'Waiting for', xoNoAnswer:'No answer. Try again!', xoYou:'You', xoYourTurn:'Your turn!', xoTheirTurn:'Turn of', xoWin:'You won! 🎉', xoLose:'won! 👏', xoDraw:'Draw! 🤝', xoLeft:'Your friend left 👋', xoAgain:'Play again', xoWaitAgain:'Waiting for your friend…', xoExit:'Back', install:'Install the game', iosHint:'On iPhone/iPad: tap Share ⬆️, then “Add to Home Screen”.', hintLook:'Drag with your finger to look around 👀', actSlide:'Slide down', actSee:'Sit on the seesaw', actSwing:'Sit on the swing', getOff:'Get off', seatBusy:'Seat taken – try another one!' }
+  menuBack:'Change avatar', voice:'Voice', games:'Game room', gamesPick:'Pick a game', soonShort:'Coming soon', xo:'Tic-tac-toe', xoNeedNet:'You need internet and a friend in the same town (same room code).', xoWait:'Waiting for a friend in the Game room…', xoHint:'Ask a friend to enter the Game room 🎲 in the same town.', xoPick:'Choose who to play with:', xoInviting:'Waiting for', xoNoAnswer:'No answer. Try again!', xoYou:'You', xoYourTurn:'Your turn!', xoTheirTurn:'Turn of', xoWin:'You won! 🎉', xoLose:'won! 👏', xoDraw:'Draw! 🤝', xoLeft:'Your friend left 👋', xoAgain:'Play again', xoWaitAgain:'Waiting for your friend…', xoExit:'Back', install:'Install the game', iosHint:'On iPhone/iPad: tap Share ⬆️, then “Add to Home Screen”.', hintLook:'Drag with your finger to look around 👀', actSlide:'Slide down', actSee:'Sit on the seesaw', actSwing:'Sit on the swing', getOff:'Get off', seatBusy:'Seat taken – try another one!', actCounter:'Choose a treat', actChair:'Sit at the table', counterTitle:'Bakery counter', bakerHi:'Hello! Which treat would you like?', poftim:'Here you go!', cakeGot:'Here you go! Find a table (inside or outside) and enjoy it 🍽️', eat:'Eat', needCake:'First get a treat from the counter! 🧁', eatDone:'Mmm, so yummy! 😋', decorate:'Decorate a cake', plateGone:'Thank you! Come again 💖', hello:'Hello! 🧁', baker:'Baker', cake1:'Cake slice', cake2:'Cupcake', cake3:'Donut', cake4:'Strawberry tart', cake5:'Brownie', cake6:'Cookies' }
 };
 const NAMES = {
  ro:['Pisicuța Veselă','Iepurașul Vesel','Ursulețul Curajos','Delfinul Isteț','Fluturașul Zâmbitor','Vulpița Șugubeață','Cățelușul Jucăuș','Puiul Curios','Broscuța Săltăreață','Pinguinul Prietenos','Gărgărița Norocoasă','Leul Blând'],
@@ -400,7 +406,7 @@ function makeBubble(text) {
    ============================================================ */
 function makePlayer(id, name, av, pet, x, z, h) {
   const rig = buildAvatar(av);
-  const p = { id, name, av, pet: '', rig, x, z, h: h || 0, tx: x, tz: z, th: h || 0, moving: false, shown: true, walkT: 0, amp: 0, bubUntil: 0, bub: null, y: 0, ty: 0, pose: 0 };
+  const p = { id, name, av, pet: '', rig, x, z, h: h || 0, tx: x, tz: z, th: h || 0, moving: false, shown: true, walkT: 0, amp: 0, bubUntil: 0, bub: null, y: 0, ty: 0, pose: 0, cake: 0, bites: 0, cakeShown: 0, cakeG: null, eatT: -1 };
   rig.group.position.set(x, BASE_Y, z); rig.group.rotation.y = p.h; scene.add(rig.group);
   p.label = makeLabel(name); p.label.sprite.position.set(0, 2.12, 0); rig.group.add(p.label.sprite);
   setPet(p, pet);
@@ -421,7 +427,7 @@ function showBubble(p, text) {
   p.bub = makeBubble(text); p.bub.sprite.position.set(0, 2.78, 0); p.rig.group.add(p.bub.sprite); p.bubUntil = performance.now() + 3500 + text.length * 70;
 }
 function destroyPlayer(p) {
-  if (p.rig) scene.remove(p.rig.group); if (p.petG) scene.remove(p.petG);
+  if (p.rig) scene.remove(p.rig.group); if (p.petG) scene.remove(p.petG); if (p.cakeG) { scene.remove(p.cakeG); p.cakeG = null; }
   if (p.label) { p.label.tex.dispose(); p.label.sprite.material.dispose(); }
   if (p.bub) { p.bub.tex.dispose(); p.bub.sprite.material.dispose(); }
   p.rig = null; p.petG = null;
@@ -433,7 +439,9 @@ function animatePlayer(p, dt, now) {
   if (p.moving || pose === 1) p.walkT += dt * (pose === 1 ? 7 : 10);
   if (pose >= 2) {            // așezat: pe tobogan (2) sau pe un loc (3-6)
     rig.legL.rotation.x = rig.legR.rotation.x = -1.4;
-    rig.armL.rotation.x = rig.armR.rotation.x = pose === 2 ? -2.5 : -.9;
+    rig.armL.rotation.x = pose === 2 ? -2.5 : -.9;
+    rig.armR.rotation.x = pose === 2 ? -2.5 : -.9;
+    if (pose >= 10 && p.eatT >= 0 && p.eatT <= .9) rig.armR.rotation.x = -.9 - 1.5 * Math.sin(Math.PI * p.eatT / .9);
     rig.inner.position.y = 0;
   } else if (pose === 1) {    // urcă pe scară
     const sn = Math.sin(p.walkT);
@@ -442,9 +450,11 @@ function animatePlayer(p, dt, now) {
     const sw = Math.sin(p.walkT) * .75 * p.amp;
     rig.legL.rotation.x = sw; rig.legR.rotation.x = -sw; rig.armL.rotation.x = -sw * .8; rig.armR.rotation.x = sw * .8;
     rig.inner.position.y = Math.abs(Math.sin(p.walkT)) * .07 * p.amp + Math.sin(now / 600) * .008;
+    if ((p.cake | 0) && (p.bites | 0) < 4) { rig.armL.rotation.x = -1.15; rig.armR.rotation.x = -1.15; }
   }
   rig.group.position.set(p.x, BASE_Y + (p.y || 0), p.z); rig.group.rotation.set(pose === 2 ? .46 : 0, p.h, 0);
   rig.shadow.visible = (p.y || 0) < .25 && pose < 3;
+  placeCake(p, now);
   if (p.bub && now > p.bubUntil) { rig.group.remove(p.bub.sprite); p.bub.tex.dispose(); p.bub.sprite.material.dispose(); p.bub = null; }
   if (p.petG) {
     const dx = p.x - p.petX, dz = p.z - p.petZ, d = Math.hypot(dx, dz);
@@ -519,6 +529,7 @@ function buildWorld() {
 
   // clădiri
   BDEF.forEach(b => {
+    if (b.id === 'bakery') { buildBakery(b); return; }
     const x = b.x, wall = b.locked ? shade(b.wall, .82) : b.wall, roof = b.locked ? shade(b.roof, .8) : b.roof;
     box(14, 6.4, 14, x, 3.2, -17, wall); box(14.4, .5, 14.4, x, .25, -17, shade(wall, .85));
     const sh = new THREE.Shape(); sh.moveTo(-8, 0); sh.lineTo(8, 0); sh.lineTo(0, 3.4); sh.closePath();
@@ -670,9 +681,11 @@ function buildWorld() {
 }
 function refreshSigns() {
   LOCS.forEach(l => { const s = signs[l.id]; if (s) s.set((l.locked ? '🔒 ' : l.emoji + ' ') + t(l.key)); });
+  if (bk.npc) bk.npc.label.set(t('baker'));
 }
 function blocked(x, z) {
   for (const s of solids) {
+    if (s.camOnly) continue;
     if (s.t === 'r') { if (x > s.x0 - .6 && x < s.x1 + .6 && z > s.z0 - .6 && z < s.z1 + .6) return true; }
     else if (s.t === 'c') { if (Math.hypot(x - s.cx, z - s.cz) < s.r + .45) return true; }
     else { const dx = (x - s.cx) / (s.rx + .6), dz = (z - s.cz) / (s.rz + .6); if (dx * dx + dz * dz < 1) return true; }
@@ -681,13 +694,293 @@ function blocked(x, z) {
 }
 function camBlocked(x, z, y) {
   if (y < .5) return true;
-  for (const s of solids) { if (s.t === 'r' && y < 10 && x > s.x0 - .3 && x < s.x1 + .3 && z > s.z0 - .3 && z < s.z1 + .3) return true; }
+  for (const s of solids) { if (s.t === 'r' && (!s.when || s.when()) && y < 10 && x > s.x0 - .3 && x < s.x1 + .3 && z > s.z0 - .3 && z < s.z1 + .3) return true; }
   return false;
 }
 
 /* ============================================================
    CAMERA din spatele avatarului + intrări
    ============================================================ */
+
+/* ============================================================
+   COFETĂRIA: interior, ghișeu, mese, prăjituri, mâncat
+   ============================================================ */
+const FY = .07;                                      // nivelul podelei/trotuarului la mobilier
+const bk = { inside: false, k: 0, doorX: -18, x0: -24.7, x1: -11.3, W: null, roof: null, proxy: null, npc: null };
+const SEATS = {};                                    // loc -> { plate:{x,y,z} } (farfuria de pe masă)
+let SEQ = 10, eatKey = '';
+const CAKE_E = { 1: '🍰', 2: '🧁', 3: '🍩', 4: '🍓', 5: '🍫', 6: '🍪' };
+const ub = () => G('ub', () => new THREE.BoxGeometry(1, 1, 1));
+const wedgeGeo = h => G('wedge' + h, () => {
+  const sh = new THREE.Shape(); sh.moveTo(-.22, 0); sh.lineTo(.3, -.2); sh.lineTo(.3, .2); sh.closePath();
+  const g = new THREE.ExtrudeGeometry(sh, { depth: h, bevelEnabled: false }); g.rotateX(-Math.PI / 2); return g;
+});
+
+/* ---------- prăjituri 3D pe farfurie ---------- */
+function buildCakePlate(id) {
+  const g = new THREE.Group(), n = new THREE.Group(); n.position.y = .045; g.add(n); g.userData.node = n;
+  const cy = G('uc', () => new THREE.CylinderGeometry(1, 1, 1, 14)), sp = G('us', () => new THREE.SphereGeometry(1, 18, 14)), cone = G('ucone', () => new THREE.ConeGeometry(1, 1, 8));
+  M(cy, '#ffffff', 0, .02, 0, g, .4, .04, .4); M(cy, '#f0f0f5', 0, .045, 0, g, .3, .012, .3);
+  const rg = new THREE.Mesh(G('plr', () => new THREE.TorusGeometry(.36, .018, 6, 24)), mat('#ff9ec4')); rg.rotation.x = Math.PI / 2; rg.position.y = .043; g.add(rg);
+  if (id === 1) {                                    // felie de tort cu frișcă și cireașă
+    const X = -.08;
+    M(wedgeGeo(.11), '#f2c879', X, 0, 0, n); M(wedgeGeo(.05), '#fff7ec', X, .11, 0, n); M(wedgeGeo(.11), '#f2c879', X, .16, 0, n); M(wedgeGeo(.05), '#ffb3c7', X, .27, 0, n);
+    M(sp, '#fffaf2', X + .22, .34, -.07, n, .055); M(sp, '#fffaf2', X + .22, .34, .07, n, .055); M(sp, '#e8223d', X + .22, .4, 0, n, .055);
+  } else if (id === 2) {                             // brioșă
+    M(G('cup', () => new THREE.CylinderGeometry(1, .7, 1, 12)), '#ff9ec4', 0, .1, 0, n, .2, .2, .2);
+    M(sp, '#fff2f7', 0, .25, 0, n, .22, .13, .22); M(sp, '#ffc2da', 0, .35, 0, n, .16, .11, .16); M(sp, '#ffffff', 0, .43, 0, n, .1, .09, .1); M(sp, '#e8223d', 0, .51, 0, n, .055);
+    const cs = ['#ffd35c', '#4d96ff', '#6bcb77', '#ff6f91'];
+    for (let i = 0; i < 8; i++) { const a = i * .8; M(ub(), cs[i % 4], Math.cos(a) * .15, .335, Math.sin(a) * .15, n, .04, .02, .02, 0, a, 0); }
+  } else if (id === 3) {                             // gogoașă glazurată
+    const d = G('donut', () => { const t0 = new THREE.TorusGeometry(.22, .1, 10, 22); t0.rotateX(Math.PI / 2); return t0; });
+    const gl = G('glaze', () => { const t0 = new THREE.TorusGeometry(.22, .106, 10, 22); t0.rotateX(Math.PI / 2); return t0; });
+    M(d, '#e5ad66', 0, .1, 0, n); M(gl, '#ff7fb0', 0, .145, 0, n, 1, .65, 1);
+    const cs = ['#ffd35c', '#4d96ff', '#6bcb77', '#ffffff', '#ff4d6d'];
+    for (let i = 0; i < 12; i++) { const a = i * .52 + (i % 3) * .1, r = .22 + (i % 2 ? .05 : -.05); M(ub(), cs[i % 5], Math.cos(a) * r, .218, Math.sin(a) * r, n, .045, .02, .02, 0, a * 2, 0); }
+  } else if (id === 4) {                             // tartă cu căpșuni
+    M(cy, '#e0a85a', 0, .05, 0, n, .3, .1, .3); M(cy, '#fff0cc', 0, .105, 0, n, .27, .03, .27);
+    for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3, px = Math.cos(a) * .16, pz = Math.sin(a) * .16; M(cone, '#e8223d', px, .19, pz, n, .07, .13, .07, Math.PI, 0, 0); M(sp, '#3fae49', px, .26, pz, n, .035, .02, .035); M(sp, '#fffaf2', Math.cos(a + .52) * .21, .14, Math.sin(a + .52) * .21, n, .04); }
+    M(cone, '#e8223d', 0, .2, 0, n, .08, .15, .08, Math.PI, 0, 0); M(sp, '#3fae49', 0, .28, 0, n, .04, .02, .04);
+  } else if (id === 5) {                             // brownie cu cremă
+    M(ub(), '#4a2a18', 0, .075, 0, n, .42, .15, .42); M(ub(), '#6a3d24', 0, .08, 0, n, .424, .03, .424); M(ub(), '#7a4a2c', 0, .17, 0, n, .42, .04, .42);
+    M(ub(), '#2b160c', -.1, .195, 0, n, .04, .012, .4); M(ub(), '#2b160c', .05, .195, 0, n, .04, .012, .4); M(ub(), '#2b160c', .16, .195, 0, n, .04, .012, .4);
+    M(sp, '#fffaf0', 0, .24, 0, n, .09, .07, .09); M(sp, '#e8223d', 0, .3, 0, n, .045);
+  } else {                                           // fursecuri cu bucăți de ciocolată
+    [[-.14, .1], [.14, .1], [0, -.14]].forEach(([cx, cz], k) => {
+      M(cy, '#d9a15f', cx, .03, cz, n, .15, .06, .15);
+      for (let j = 0; j < 4; j++) { const a = j * 1.6 + k; M(sp, '#4a2a18', cx + Math.cos(a) * .07, .066, cz + Math.sin(a) * .07, n, .028); }
+    });
+  }
+  return g;
+}
+function setBites(g, b) {
+  const s = [1, .78, .56, .34, .001][Math.max(0, Math.min(4, b))];
+  g.userData.node.scale.setScalar(s); g.userData.node.visible = b < 4;
+}
+function updateCake(p) {
+  if (!p.rig) return;
+  const id = p.cake | 0;
+  if (id !== p.cakeShown) {
+    if (p.cakeG) { scene.remove(p.cakeG); p.cakeG = null; }
+    p.cakeShown = id;
+    if (id) { p.cakeG = buildCakePlate(id); p.cakeG.visible = false; scene.add(p.cakeG); }
+  }
+  if (p.cakeG) setBites(p.cakeG, p.bites | 0);
+}
+function placeCake(p, now) {
+  const g = p.cakeG; if (!g) return;
+  const pose = p.pose | 0, S = SEATS[pose];
+  if (pose >= 10 && S) { g.visible = true; g.position.set(S.plate.x, S.plate.y, S.plate.z); g.rotation.set(0, 0, 0); g.scale.setScalar(1); }
+  else if (pose === 0) {
+    g.visible = true; const bob = Math.sin(p.walkT) * .035 * p.amp;
+    g.position.set(p.x + Math.sin(p.h) * .5, BASE_Y + (p.y || 0) + .9 + bob, p.z + Math.cos(p.h) * .5); g.rotation.set(0, p.h, 0); g.scale.setScalar(.75);
+  } else g.visible = false;
+}
+
+/* ---------- unelte de construcție ---------- */
+function collect(fn) {
+  const s0 = SG.length; fn(); const part = SG.splice(s0);
+  const m = new THREE.Mesh(mergeGeos(part), new THREE.MeshLambertMaterial({ vertexColors: true })); m.frustumCulled = false; scene.add(m); return m;
+}
+function groupToSG(g) {
+  g.updateMatrixWorld(true);
+  g.traverse(o => { if (o.isMesh) { const geo = o.geometry.clone(); geo.applyMatrix4(o.matrixWorld); paint(geo, o.material.color); SG.push(geo); } });
+}
+function wseg(x0, x1, z0, z1, y0, y1, out, cOut, cIn) {            // perete cu fața de afară și cea de înăuntru colorate diferit
+  const h = y1 - y0, cy = (y0 + y1) / 2;
+  if (out === '+z' || out === '-z') {
+    const zm = (z0 + z1) / 2, o = out === '+z' ? [zm, z1] : [z0, zm], i = out === '+z' ? [z0, zm] : [zm, z1];
+    box(x1 - x0, h, o[1] - o[0], (x0 + x1) / 2, cy, (o[0] + o[1]) / 2, cOut); box(x1 - x0, h, i[1] - i[0], (x0 + x1) / 2, cy, (i[0] + i[1]) / 2, cIn);
+  } else {
+    const xm = (x0 + x1) / 2, o = out === '+x' ? [xm, x1] : [x0, xm], i = out === '+x' ? [x0, xm] : [xm, x1];
+    box(o[1] - o[0], h, z1 - z0, (o[0] + o[1]) / 2, cy, (z0 + z1) / 2, cOut); box(i[1] - i[0], h, z1 - z0, (i[0] + i[1]) / 2, cy, (z0 + z1) / 2, cIn);
+  }
+}
+
+/* ---------- clădirea cofetăriei ---------- */
+function buildBakery(b) {
+  const x = b.x, roof = b.roof, wall = b.wall, inC = 0xfff1e2, H = 6.4, LOW = 1.35, DW = 1.7;
+  bk.doorX = x; bk.x0 = x - 6.7; bk.x1 = x + 6.7;
+  const capB = (x0, x1, z0, z1) => box(x1 - x0 + .12, .1, z1 - z0 + .12, (x0 + x1) / 2, LOW + .05, (z0 + z1) / 2, 0xffffff);
+  const front = top => { wseg(x - 7, x - DW, -10.3, -10, 0, top, '+z', wall, inC); wseg(x + DW, x + 7, -10.3, -10, 0, top, '+z', wall, inC); };
+  const leftW = top => wseg(x - 7, x - 6.7, -23.7, -10.3, 0, top, '-x', wall, inC);
+  const rightW = top => wseg(x + 6.7, x + 7, -23.7, -10.3, 0, top, '+x', wall, inC);
+  const backW = top => wseg(x - 7, x + 7, -24, -23.7, 0, top, '-z', wall, inC);
+  const W = bk.W = {};
+  W.front = {
+    full: collect(() => {
+      front(H); wseg(x - DW, x + DW, -10.3, -10, 3.9, H, '+z', wall, inC);
+      box(.22, 3.9, .5, x - DW - .1, 1.95, -10.1, 0xffffff); box(.22, 3.9, .5, x + DW + .1, 1.95, -10.1, 0xffffff); box(4.0, .25, .5, x, 4.0, -10.1, 0xffffff);
+      for (let i = 0; i < 10; i++) { const c = i % 2 ? 0xffffff : roof; box(1.2, .12, 2.6, x - 5.4 + i * 1.2, 4.55, -8.75, c, 0, .27); box(1.2, .38, .1, x - 5.4 + i * 1.2, 4.08, -7.5, c); }
+      [-1, 1].forEach(s => {
+        const wx = x + s * 4.4;
+        box(3.2, 2.7, .3, wx, 2.85, -9.88, 0xffffff); box(2.8, 2.3, .32, wx, 2.85, -9.86, 0xcdeeff);
+        box(.12, 2.3, .34, wx, 2.85, -9.85, 0xffffff); box(2.8, .12, .34, wx, 2.85, -9.85, 0xffffff);
+        box(3.2, .5, .7, wx, 1.35, -9.65, 0x6b4a36);
+        for (let k = 0; k < 5; k++) sph(.2, wx - 1.2 + k * .6, 1.75, -9.6, [0xff7f6b, 0xffd35c, 0xff9ec4, 0xffffff, 0xc9b6ff][k]);
+      });
+      box(7.6, 1.7, .22, x, 5.62, -9.9, roof); box(7.2, 1.4, .25, x, 5.62, -9.82, 0xffffff);
+    }),
+    low: collect(() => { front(LOW); capB(x - 7, x - DW, -10.3, -10); capB(x + DW, x + 7, -10.3, -10); })
+  };
+  W.left = { full: collect(() => leftW(H)), low: collect(() => { leftW(LOW); capB(x - 7, x - 6.7, -23.7, -10.3); }) };
+  W.right = { full: collect(() => rightW(H)), low: collect(() => { rightW(LOW); capB(x + 6.7, x + 7, -23.7, -10.3); }) };
+  W.back = { full: collect(() => backW(H)), low: collect(() => { backW(LOW); capB(x - 7, x + 7, -24, -23.7); }) };
+  Object.keys(W).forEach(k => { W[k].low.visible = false; });
+  bk.roof = collect(() => {
+    const sh = new THREE.Shape(); sh.moveTo(-8, 0); sh.lineTo(8, 0); sh.lineTo(0, 3.4); sh.closePath();
+    put(new THREE.ExtrudeGeometry(sh, { depth: 15.4, bevelEnabled: false }), roof, x, 6.4, -24.7);
+    box(1.2, 2, 1.2, x + 4.5, 8.5, -19, 0xc4725a);
+  });
+
+  // ---------- interior + mobilier ----------
+  const cz = -20.7, cy0 = FY + 1.12, cx0 = x - 6.2, cx1 = x + .6, cl = cx1 - cx0, cc = (cx0 + cx1) / 2, ch = .95;
+  const chairAt = (cx, cz2, dx, dz) => {
+    const wood = 0xc98f5a;
+    box(.6, .07, .6, cx, FY + .515, cz2, wood); box(.52, .05, .52, cx, FY + .57, cz2, 0xff9ec4);
+    [-.24, .24].forEach(i => [-.24, .24].forEach(j => box(.06, .48, .06, cx + i, FY + .24, cz2 + j, wood)));
+    if (Math.abs(dx) > .5) box(.07, .62, .6, cx + dx * .27, FY + .9, cz2, wood); else box(.6, .62, .07, cx, FY + .9, cz2 + dz * .27, wood);
+  };
+  const tableAt = (tx, tz, outdoor) => {
+    cyl(.1, .12, .74, tx, FY + .37, tz, 0xb88b60, 8); cyl(.45, .5, .07, tx, FY + .035, tz, 0xb88b60, 14);
+    cyl(.99, .99, .03, tx, FY + .72, tz, 0xff9ec4, 18); cyl(.95, .95, .07, tx, FY + .765, tz, 0xffffff, 18);
+    solids.push({ t: 'c', cx: tx, cz: tz, r: .95 });
+    if (outdoor) { cyl(.04, .04, 2.3, tx, FY + 1.15, tz, 0x888899, 6); put(new THREE.ConeGeometry(1.9, .7, 12), 0xff9ec4, tx, FY + 2.55, tz); put(new THREE.ConeGeometry(.9, .72, 12), 0xffffff, tx, FY + 2.57, tz); }
+    else { cyl(.06, .05, .2, tx, FY + .9, tz, 0xffffff, 8); sph(.09, tx, FY + 1.07, tz, 0xff7f6b); }
+  };
+  const addSeat = (tx, tz, dx, dz, zone) => {
+    const id = SEQ++, cx = tx + dx * 1.45, cz2 = tz + dz * 1.45;
+    chairAt(cx, cz2, dx, dz);
+    const a = new THREE.Object3D(); a.position.set(cx, FY + .64, cz2); scene.add(a); seatAnchors[id] = a;
+    SEAT_H[id] = Math.atan2(-dx, -dz); SEATS[id] = { plate: { x: tx + dx * .55, y: FY + .81, z: tz + dz * .55 } };
+    const door = { x: tx + dx * 2.45, z: tz + dz * 2.45 };
+    const loc = { id: 'chair' + id, act: 'seat', seat: id, emoji: '🪑', key: 'actChair', door, exit: { x: door.x, z: door.z }, r: 1.4, zone };
+    LOCS.push(loc); proxy(.95, 1.5, .95, cx, .9, cz2, loc); solids.push({ t: 'c', cx, cz: cz2, r: .35 });
+  };
+  const DIR = { N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] };
+  const tableSet = (tx, tz, dirs, zone, outdoor) => { tableAt(tx, tz, outdoor); dirs.forEach(d => addSeat(tx, tz, DIR[d][0], DIR[d][1], zone)); };
+
+  const interior = collect(() => {
+    box(13.4, .12, 13.4, x, 0, -17, 0xffffff);                                            // podeaua
+    box(3.2, .02, 7.4, x, FY + .01, -14.4, 0xffffff); box(2.8, .025, 7.0, x, FY + .012, -14.4, 0xffc9d9);   // covor
+    box(2.4, .04, 1.2, x, .1, -9.3, 0xe05a6a);                                            // pres la intrare
+    // ghișeul
+    box(13.4, 1.0, 1.6, x, FY + .5, cz, 0xff9ec4);
+    for (let i = -5; i <= 5; i++) box(.08, .78, .05, x + i * 1.2, FY + .5, cz + .82, 0xffffff);
+    box(13.0, .06, .05, x, FY + .14, cz + .82, 0xffffff); box(13.0, .06, .05, x, FY + .86, cz + .82, 0xffffff);
+    box(13.6, .12, 1.9, x, FY + 1.06, cz, 0xffffff);
+    // cadrul vitrinei
+    [cx0, cc, cx1].forEach(px => { box(.06, ch, .06, px, cy0 + ch / 2, cz + .42, 0xffffff); box(.06, ch, .06, px, cy0 + ch / 2, cz - .42, 0xffffff); });
+    box(cl, .06, .06, cc, cy0 + ch, cz + .42, 0xffffff); box(cl, .06, .06, cc, cy0 + ch, cz - .42, 0xffffff); box(.06, .06, .9, cx0, cy0 + ch, cz, 0xffffff); box(.06, .06, .9, cx1, cy0 + ch, cz, 0xffffff);
+    [1, 2, 3, 4, 5, 6].forEach((id, i) => { const cg = buildCakePlate(id); cg.scale.setScalar(.85); cg.position.set(x - 5.5 + i * 1.1, cy0, cz); groupToSG(cg); });
+    // casa de marcat și clopoțelul
+    box(.8, .3, .6, x + 4.2, cy0 + .15, cz, 0xe7e1d3); box(.5, .3, .05, x + 4.2, cy0 + .46, cz - .2, 0x2d2a4a, 0, -.35); sph(.12, x + 3.2, cy0 + .1, cz + .3, 0xffd35c, 1, .7, 1);
+    // rafturi pe peretele din spate
+    const pal = [0xff9ec4, 0x8fe3d1, 0xffd35c, 0xc9b6ff, 0xffffff, 0xff7f6b];
+    [2.3, 3.2, 4.1].forEach((sy, si) => [-4.2, 4.2].forEach(sx => {
+      box(4.6, .1, .55, x + sx, sy, -23.4, 0xc98f5a);
+      for (let k = 0; k < 6; k++) {
+        const px = x + sx - 2 + k * .8, tp = (si + k) % 3;
+        if (tp === 0) { cyl(.16, .16, .36, px, sy + .23, -23.4, pal[(k + si) % 6], 10); cyl(.17, .17, .06, px, sy + .44, -23.4, 0xffffff, 10); }
+        else if (tp === 1) sph(.2, px, sy + .2, -23.4, 0xe3a857, 1.2, .7, .8);
+        else { cyl(.22, .22, .04, px, sy + .07, -23.4, 0xffffff, 12); sph(.14, px, sy + .18, -23.4, pal[(k + si + 2) % 6], 1, .8, 1); }
+      }
+    }));
+    box(3.4, 2.4, .08, x, 3.2, -23.65, 0x8a5a44); box(3.1, 2.1, .1, x, 3.2, -23.6, 0x2f4a3f);   // tabla de meniu
+    // plante în colțuri
+    [[-6.0, -22.9], [6.0, -22.9], [-6.1, -11.0], [6.1, -11.0]].forEach(([dx, dz]) => {
+      cyl(.3, .24, .4, x + dx, FY + .2, dz, 0xd96c4a, 10); sph(.5, x + dx, FY + .85, dz, 0x4fae58); sph(.35, x + dx + .2, FY + 1.2, dz, 0x66c76d);
+      if (dz > -12) solids.push({ t: 'c', cx: x + dx, cz: dz, r: .4 });
+    });
+    // mese și scaune
+    tableSet(x - 4, -14, ['S', 'N', 'E'], 'in', false);
+    tableSet(x + 4, -14, ['S', 'N', 'W'], 'in', false);
+    tableSet(x - 5.5, -6.6, ['N', 'S', 'E', 'W'], null, true);
+    tableSet(x + 5.5, -6.6, ['N', 'S', 'E', 'W'], null, true);
+  });
+  interior.userData.keep = true;
+
+  // podea cu plăci (textură) – plan separat deasupra plăcii
+  const cv = document.createElement('canvas'); cv.width = cv.height = 128; const c2 = cv.getContext('2d');
+  c2.fillStyle = '#ffe3ec'; c2.fillRect(0, 0, 128, 128); c2.fillStyle = '#fff7ea'; c2.fillRect(0, 0, 64, 64); c2.fillRect(64, 64, 64, 64);
+  const ft = new THREE.CanvasTexture(cv); ft.wrapS = ft.wrapT = THREE.RepeatWrapping; ft.repeat.set(6.7, 6.7); ft.magFilter = THREE.NearestFilter;
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(13.4, 13.4), new THREE.MeshLambertMaterial({ map: ft, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.set(x, .065, -17); scene.add(floor);
+  // sticla vitrinei
+  const gm = new THREE.MeshLambertMaterial({ color: 0xcfefff, transparent: true, opacity: .24, depthWrite: false });
+  [[cl, ch, .03, cc, cy0 + ch / 2, cz + .43], [cl, ch, .03, cc, cy0 + ch / 2, cz - .43], [cl, .03, .88, cc, cy0 + ch, cz], [.03, ch, .88, cx0, cy0 + ch / 2, cz], [.03, ch, .88, cx1, cy0 + ch / 2, cz]].forEach(a => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(a[0], a[1], a[2]), gm); m.position.set(a[3], a[4], a[5]); scene.add(m);
+  });
+  // tabla cu meniul
+  const bc = document.createElement('canvas'); bc.width = 512; bc.height = 352; const b2 = bc.getContext('2d');
+  b2.fillStyle = '#ffffff'; b2.textAlign = 'center'; b2.textBaseline = 'middle'; b2.font = '700 56px ' + FONT; b2.fillText('Cofetăria Rania', 256, 62);
+  b2.font = '84px sans-serif'; ['🍰', '🧁', '🍩'].forEach((e, i) => b2.fillText(e, 106 + i * 150, 168)); ['🍓', '🍫', '🍪'].forEach((e, i) => b2.fillText(e, 106 + i * 150, 276));
+  const bt = new THREE.CanvasTexture(bc); bt.minFilter = THREE.LinearFilter; bt.generateMipmaps = false;
+  const board = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 2.06), new THREE.MeshBasicMaterial({ map: bt, transparent: true })); board.position.set(x, 3.2, -23.53); scene.add(board);
+
+  // ---------- coliziuni ----------
+  solids.push({ t: 'r', x0: x - 7, x1: x - DW, z0: -10.3, z1: -10 }, { t: 'r', x0: x + DW, x1: x + 7, z0: -10.3, z1: -10 },
+    { t: 'r', x0: x - 7, x1: x - 6.7, z0: -24, z1: -10.3 }, { t: 'r', x0: x + 6.7, x1: x + 7, z0: -24, z1: -10.3 }, { t: 'r', x0: x - 7, x1: x + 7, z0: -24, z1: -23.7 },
+    { t: 'r', x0: x - 6.7, x1: x + 6.7, z0: -21.6, z1: -19.8 },
+    { t: 'r', x0: x - 7, x1: x + 7, z0: -24, z1: -10, camOnly: true, when: () => !bk.inside });
+
+  // ---------- locații și atingeri ----------
+  const loc = { id: 'bakery', emoji: '🧁', key: 'bakery', walk: true, noBtn: true, zone: 'in', door: { x, z: -12.6 }, r: 1 };
+  LOCS.push(loc); bk.proxy = proxy(14, 9, 14, x, 4.5, -17, loc);
+  const cloc = { id: 'counter', act: 'counter', emoji: '🧁', key: 'actCounter', zone: 'in', door: { x: x - 2.7, z: -18.6 }, r: 2.4 };
+  LOCS.push(cloc); proxy(13.4, 2.4, 3.4, x, 1.3, cz, cloc);
+  signs.bakery = signPlane(6.8, 1.3, x, 5.62, -9.68, 100);
+  const mkRing = (rx, rz, r0, r1) => { const ring = new THREE.Mesh(new THREE.RingGeometry(r0, r1, 36), new THREE.MeshBasicMaterial({ color: 0xffd35c, transparent: true, opacity: .85, side: THREE.DoubleSide })); ring.rotation.x = -Math.PI / 2; ring.position.set(rx, .13, rz); scene.add(ring); anims.push(t => { const s = 1 + Math.sin(t * 3) * .1; ring.scale.set(s, s, s); }); };
+  mkRing(x, -6.8, 1.6, 2.1); emojiSprite('🧁', x, 3.2, -6.8, 1.5);
+  mkRing(x - 2.7, -18.6, 1.0, 1.4); emojiSprite('🧁', x - 2.7, 2.6, -18.6, 1.1);
+
+  // ---------- cofetăreasa ----------
+  const npc = makePlayer('npc_baker', t('baker'), { sk: '#F5C9A0', hc: '#6B3E1F', hs: 0, sh: '#ffffff', ac: 0 }, '', x - 2.7, -22.55, 0);
+  const gcy = G('uc', () => new THREE.CylinderGeometry(1, 1, 1, 14)), gsp = G('us', () => new THREE.SphereGeometry(1, 18, 14));
+  M(gcy, '#ffffff', 0, 2.1, 0, npc.rig.inner, .3, .3, .3); M(gsp, '#ffffff', 0, 2.33, 0, npc.rig.inner, .34, .25, .34); M(ub(), '#ff9ec4', 0, .92, .32, npc.rig.inner, .52, .62, .05);
+  npc.label.sprite.position.y = 2.6; bk.npc = npc;
+  anims.push((tt, dt) => { animatePlayer(npc, dt, performance.now()); if (npc.rig) { const w = tt % 11 < 1.8; npc.rig.armR.rotation.x = w ? -2.7 + Math.sin(tt * 13) * .3 : 0; } });
+}
+
+/* ---------- starea „sunt în cofetărie” (pereții se taie ca la o casă de păpuși) ---------- */
+function updateBakery(dt) {
+  const me = session.me, inB = me.x > bk.x0 && me.x < bk.x1 && me.z > -23.7 && me.z < -10.25;
+  if (inB !== bk.inside) { bk.inside = inB; bk.proxy.userData.off = inB; if (inB && bk.npc) showBubble(bk.npc, t('hello')); }
+  bk.k += ((inB ? 1 : 0) - bk.k) * (1 - Math.exp(-dt * 5));
+  const cp = camera.position, x = bk.doorX, W = bk.W;
+  const full = { front: !inB || cp.z < -10.3, back: !inB || cp.z > -23.7, left: !inB || cp.x > x - 6.7, right: !inB || cp.x < x + 6.7 };
+  for (const k in W) { W[k].full.visible = full[k]; W[k].low.visible = !full[k]; }
+  signs.bakery.mesh.visible = full.front; bk.roof.visible = !inB;
+}
+function inBakeryRect(tx, tz) { return tx > bk.x0 && tx < bk.x1 && tz > -23.7 && tz < -10.3; }
+function routeTarget(tx, tz, inZone) {                // trecerea prin ușă, ca să nu te blochezi în pereți
+  const dx = bk.doorX, dest = { x: tx, z: tz };
+  if (inZone && !bk.inside) return { x: dx, z: -6.8, next: { x: dx, z: -12.2, next: dest } };
+  if (!inZone && bk.inside) return { x: dx, z: -12.2, next: { x: dx, z: -6.8, next: dest } };
+  return dest;
+}
+
+/* ---------- ghișeul: alegi prăjitura ---------- */
+function gCounter() {
+  const me = session.me;
+  mbody.innerHTML = `<div class="cust"><div class="face">👩‍🍳</div><div class="bub">${t('bakerHi')}</div></div>
+    <div class="cakes">${[1, 2, 3, 4, 5, 6].map(id => `<button class="btn cake ${me.cake === id ? 'on' : ''}" data-k="${id}">${CAKE_E[id]}<small>${t('cake' + id)}</small></button>`).join('')}</div>
+    <div class="row" style="justify-content:center;margin-top:6px"><button class="btn sun sm" id="decor">🎨 ${t('decorate')}</button></div>`;
+  head('🧁', t('counterTitle'));
+  mbody.querySelectorAll('.cake').forEach(b => b.onclick = () => takeCake(+b.dataset.k));
+  $('#decor').onclick = () => gBakery();
+}
+function takeCake(id) {
+  const me = session.me; me.cake = id; me.bites = 0; me.eatT = -1; updateCake(me); closeModal();
+  if (bk.npc) showBubble(bk.npc, t('poftim')); toast(t('cakeGot')); speak(t('poftim')); burst(); sendPos(true);
+}
+function onEat() {
+  if (!session || modalOpen) return; const me = session.me;
+  if (!(me.ride && me.ride.stage === 'seated' && me.ride.seat >= 10)) return;
+  if (!me.cake || me.bites >= 4 || me.eatT >= 0) return;
+  me.eatT = 0; me.biteDone = false;
+}
+
 /* ============================================================
    TOBOGAN, BALANSOAR, LEAGĂNE – echipamente interactive
    ============================================================ */
@@ -707,7 +1000,7 @@ function seatOccupied(id) {
 function seatPos(id) { const a = seatAnchors[id]; if (!a) return null; a.getWorldPosition(_v); return { x: _v.x, y: _v.y - .5 - BASE_Y, z: _v.z }; }
 function applySeat(p) { const s = seatPos(p.pose | 0); if (!s) return false; p.x = s.x; p.y = s.y; p.z = s.z; p.h = SEAT_H[p.pose] || 0; return true; }
 const slideY = zs => 2.365 - (zs - 20) * .5 - .49 - BASE_Y;
-function activate(id) { const l = LOCS.find(x => x.id === id); if (!l) return; if (l.act) startRide(l); else openLoc(id); }
+function activate(id) { const l = LOCS.find(x => x.id === id); if (!l) return; if (l.walk) return; if (l.act === 'counter') openLoc('counter'); else if (l.act) startRide(l); else openLoc(id); }
 function onAction() {
   if (!session || modalOpen) return; const me = session.me;
   if (me.ride) { dismount(); return; }
@@ -718,11 +1011,13 @@ function startRide(l) {
   target = null; pending = null; btnKey = '';
   if (l.act === 'slide') { me.ride = { type: 'slide', stage: 'align', t: 0, fx: me.x, fz: me.z }; return; }
   if (seatOccupied(l.seat)) { toast(t('seatBusy')); return; }
+  if (l.seat >= 10 && !me.cake) toast(t('needCake'));
   me.pose = l.seat; me.ride = { type: 'seat', seat: l.seat, stage: 'mount', t: 0, fx: me.x, fy: me.y || 0, fz: me.z, l };
 }
 function dismount() {
   const me = session.me; if (!me.ride || me.ride.type !== 'seat' || me.ride.stage !== 'seated') return;
   const l = me.ride.l; me.pose = 0; btnKey = '';
+  if (l.seat >= 10) { me.eatT = -1; if (me.cake) { me.cake = 0; me.bites = 0; updateCake(me); toast(t('plateGone')); } }
   me.ride = { type: 'dismount', t: 0, fx: me.x, fy: me.y || 0, fz: me.z, tx: l.exit.x, tz: l.exit.z };
 }
 function updateRide(me, dt) {
@@ -748,8 +1043,8 @@ function updateRide(me, dt) {
 
 const cam = { yaw: Math.PI, pitch: .38, dist: 8.2 };
 function updateCamera(dt, snap) {
-  const me = session.me, fx_ = Math.sin(cam.yaw), fz_ = Math.cos(cam.yaw), ty = 1.5 + (session.me.y || 0), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
-  let d = cam.dist;
+  const me = session.me, fx_ = Math.sin(cam.yaw), fz_ = Math.cos(cam.yaw), ty = 1.5 + (session.me.y || 0), pit = cam.pitch + .2 * bk.k, cp = Math.cos(pit), sp = Math.sin(pit);
+  let d = cam.dist * (1 - .18 * bk.k);
   for (; d > 2.4; d -= .5) { if (!camBlocked(me.x - fx_ * d * cp, me.z - fz_ * d * cp, ty + d * sp)) break; }
   const dx = me.x - fx_ * d * cp, dy = ty + d * sp, dz = me.z - fz_ * d * cp, k = snap ? 1 : 1 - Math.exp(-dt * 10);
   camera.position.x += (dx - camera.position.x) * k; camera.position.y += (dy - camera.position.y) * k; camera.position.z += (dz - camera.position.z) * k;
@@ -767,13 +1062,14 @@ function handleTap(cx, cy) {
   if (!session || modalOpen) return;
   closeChat();
   const r = renderer.domElement.getBoundingClientRect(); ndc.set(((cx - r.left) / r.width) * 2 - 1, -((cy - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera);
-  const hits = ray.intersectObjects(pickables, false);
+  const hits = ray.intersectObjects(pickables, false).filter(h => !h.object.userData.off);
   if (hits.length) {
     const l = hits[0].object.userData.loc;
-    if (l) { if (l.locked) { toast(t('soon')); return; } pending = l.id; target = { x: l.door.x, z: l.door.z }; mark(l.door.x, l.door.z); return; }
+    if (l) { if (l.locked) { toast(t('soon')); return; } pending = l.id; target = routeTarget(l.door.x, l.door.z, l.zone === 'in'); mark(l.door.x, l.door.z); return; }
   }
   const pt = new THREE.Vector3(); if (!ray.ray.intersectPlane(G('gp', () => new THREE.Plane(new THREE.Vector3(0, 1, 0), -.09)), pt)) return;
-  pending = null; target = { x: Math.max(BOUNDS.x0, Math.min(BOUNDS.x1, pt.x)), z: Math.max(BOUNDS.z0, Math.min(BOUNDS.z1, pt.z)) }; mark(target.x, target.z);
+  const gx = Math.max(BOUNDS.x0, Math.min(BOUNDS.x1, pt.x)), gz = Math.max(BOUNDS.z0, Math.min(BOUNDS.z1, pt.z));
+  pending = null; target = routeTarget(gx, gz, inBakeryRect(gx, gz)); mark(gx, gz);
 }
 function initPointer() {
   const dom = renderer.domElement, ptrs = new Map(); let pinch = 0;
@@ -816,7 +1112,7 @@ function update(dt, now) {
     if (ix || iy) { wx = f.x * iy + r.x * ix; wz = f.z * iy + r.z * ix; mag = Math.min(1, Math.hypot(ix, iy)); }
     else if (target) {
       const dx = target.x - me.x, dz = target.z - me.z, d = Math.hypot(dx, dz);
-      if (d < .4) { target = null; if (pending) { const id = pending; pending = null; activate(id); } }
+      if (d < (target.next ? .6 : .4)) { if (target.next) target = target.next; else { target = null; if (pending) { const id = pending; pending = null; activate(id); } } }
       else { wx = dx / d; wz = dz / d; mag = 1; tapMode = true; }
     }
   }
@@ -833,10 +1129,16 @@ function update(dt, now) {
     if (tapMode && moved) { const dd = angDiff(cam.yaw, Math.atan2(wx, wz)); if (Math.abs(dd) < 2.3) cam.yaw += dd * (1 - Math.exp(-dt * 1.4)); }
   }
   if (me.ride) { if (me.ride.stage === 'seated' && anyInput()) dismount(); if (me.ride) updateRide(me, dt); }
+  if (me.eatT >= 0) {
+    me.eatT += dt;
+    if (!me.biteDone && me.eatT > .45) { me.biteDone = true; me.bites++; updateCake(me); sendPos(); if (me.bites >= 4) { burst(); toast(t('eatDone')); speak(t('eatDone')); showBubble(me, '😋'); } }
+    if (me.eatT > .9) me.eatT = -1;
+  }
   animatePlayer(me, dt, now);
+  updateBakery(dt);
   let nl = null; const seated = !!(me.ride && me.ride.stage === 'seated');
   if (modalOpen) btnKey = '';
-  if (!me.ride && !modalOpen) { for (const l of LOCS) { if (!l.locked && Math.hypot(me.x - l.door.x, me.z - l.door.z) < l.r) { nl = l; break; } } }
+  if (!me.ride && !modalOpen) { let bd = 1e9; for (const l of LOCS) { if (l.locked || l.noBtn) continue; const dd = Math.hypot(me.x - l.door.x, me.z - l.door.z); if (dd < l.r && dd < bd) { nl = l; bd = dd; } } }
   nearLoc = nl;
   const key = seated ? 'off' : (nl ? nl.id : '');
   if (key !== btnKey) {
@@ -845,10 +1147,13 @@ function update(dt, now) {
     else if (nl) { b.textContent = nl.act ? nl.emoji + ' ' + t(nl.key) : nl.emoji + ' ' + t('enter') + ' – ' + t(nl.key); b.style.display = 'block'; }
     else b.style.display = 'none';
   }
+  const canEat = !!(seated && me.ride.seat >= 10 && me.cake && me.bites < 4 && me.eatT < 0 && !modalOpen), ek = canEat ? 'e' : '';
+  if (ek !== eatKey) { eatKey = ek; const eb = $('#eatBtn'); if (canEat) { eb.textContent = '🍴 ' + t('eat'); eb.style.display = 'block'; } else eb.style.display = 'none'; }
   for (const id in session.remotes) {
     const rp = session.remotes[id]; if (!rp.rig) continue;
     rp.rig.group.visible = rp.shown; if (rp.petG) rp.petG.visible = rp.shown;
     if (!rp.shown) continue;
+    if (rp.eatT >= 0) { rp.eatT += dt; if (rp.eatT > .9) rp.eatT = -1; }
     if ((rp.pose | 0) >= 3 && applySeat(rp)) { rp.moving = false; }
     else {
       const k = 1 - Math.exp(-dt * 11), ox = rp.x, oz = rp.z;
@@ -942,19 +1247,22 @@ function onPos(d) {
   if (!session || !d) return; dbg.r++;
   const r = session.remotes[d.i]; if (!r) { if (d.i) posCache[d.i] = d; return; }
   const x = +d.x, z = +d.z, h = +d.r; if (!isFinite(x) || !isFinite(z) || !isFinite(h)) return;
-  r.tx = Math.max(-80, Math.min(80, x)); r.tz = Math.max(-40, Math.min(70, z)); r.th = h; r.ty = isFinite(+d.y) ? +d.y : 0; r.pose = ((d.q | 0) >= 0 && (d.q | 0) <= 6) ? (d.q | 0) : 0;
+  r.tx = Math.max(-80, Math.min(80, x)); r.tz = Math.max(-40, Math.min(70, z)); r.th = h; r.ty = isFinite(+d.y) ? +d.y : 0; r.pose = ((d.q | 0) >= 0 && (d.q | 0) <= 40) ? (d.q | 0) : 0;
   if (!r.shown) { r.x = r.tx; r.z = r.tz; r.h = r.th; r.y = r.ty; r.shown = true; if (r.petG) { r.petX = r.x - 1.6; r.petZ = r.z; } }
+  const nc = ((d.c | 0) >= 0 && (d.c | 0) <= 6) ? (d.c | 0) : 0, nb = Math.max(0, Math.min(4, d.b | 0));
+  if (nc && nc === r.cake && nb > r.bites) { r.eatT = 0; if (nb >= 4 && r.rig) showBubble(r, '😋'); }
+  r.cake = nc; r.bites = nb; updateCake(r); placeCake(r, performance.now());
 }
 function sendPos(force) {
   if (!chan || !netOk || !session) return; dbg.s++;
   const m = session.me;
-  chan.send({ type: 'broadcast', event: 'p', payload: { i: S.id, x: +m.x.toFixed(2), z: +m.z.toFixed(2), r: +m.h.toFixed(2), y: +(m.y || 0).toFixed(2), q: m.pose | 0 } });
-  lastSent = { x: m.x, z: m.z, h: m.h, y: m.y || 0, q: m.pose | 0 }; lastSentT = performance.now();
+  chan.send({ type: 'broadcast', event: 'p', payload: { i: S.id, x: +m.x.toFixed(2), z: +m.z.toFixed(2), r: +m.h.toFixed(2), y: +(m.y || 0).toFixed(2), q: m.pose | 0, c: m.cake | 0, b: m.bites | 0 } });
+  lastSent = { x: m.x, z: m.z, h: m.h, y: m.y || 0, q: m.pose | 0, c: m.cake | 0, b: m.bites | 0 }; lastSentT = performance.now();
 }
 function netTick(now) {
   if (!chan || !netOk) return;
   const m = session.me, t0 = performance.now();
-  const moved = Math.abs(m.x - lastSent.x) > .05 || Math.abs(m.z - lastSent.z) > .05 || Math.abs(angDiff(lastSent.h, m.h)) > .08 || Math.abs((m.y || 0) - (lastSent.y || 0)) > .04 || (m.pose | 0) !== (lastSent.q | 0);
+  const moved = Math.abs(m.x - lastSent.x) > .05 || Math.abs(m.z - lastSent.z) > .05 || Math.abs(angDiff(lastSent.h, m.h)) > .08 || Math.abs((m.y || 0) - (lastSent.y || 0)) > .04 || (m.pose | 0) !== (lastSent.q | 0) || (m.cake | 0) !== (lastSent.c | 0) || (m.bites | 0) !== (lastSent.b | 0);
   if ((moved && t0 - lastSentT > 90) || (wasMoving && !m.moving) || t0 - lastSentT > 1500) sendPos();
   wasMoving = m.moving;
 }
@@ -1032,13 +1340,14 @@ function applyHudText() {
   $('#btnHide').textContent = S.hideChat ? '👁️' : '🙈'; $('#btnHide').title = t('hideChat'); refreshSigns();
 }
 function initHud() {
-  $('#btnLang').onclick = () => { S.lang = S.lang === 'ro' ? 'en' : 'ro'; save(); applyHudText(); nearLoc = null; btnKey = ''; };
+  $('#btnLang').onclick = () => { S.lang = S.lang === 'ro' ? 'en' : 'ro'; save(); applyHudText(); nearLoc = null; btnKey = ''; eatKey = ''; };
   $('#btnVoice').onclick = () => { S.voice = !S.voice; if (!S.voice && 'speechSynthesis' in window) speechSynthesis.cancel(); save(); applyHudText(); };
   $('#btnMenu').onclick = backToMenu;
   $('#btnChat').onclick = () => { const p = $('#chatPanel'); if (p.style.display === 'flex') closeChat(); else { p.style.display = 'flex'; $('#chatDot').style.display = 'none'; setTimeout(() => $('#chatIn').focus(), 50); } };
   $('#btnHide').onclick = () => { S.hideChat = !S.hideChat; save(); applyHudText(); };
   $('#chatForm').onsubmit = e => { e.preventDefault(); const i = $('#chatIn'); sendChat(i.value); i.value = ''; };
   $('#enterBtn').onclick = () => onAction();
+  $('#eatBtn').onclick = () => onEat();
   const q = $('#quick'); ['👋', '😀', '❤️', '👍', '🎂', '🐶'].forEach(e => { const b = document.createElement('button'); b.type = 'button'; b.textContent = e; b.onclick = () => sendChat(e); q.appendChild(b); });
   // joystick
   const j = $('#joy'), k = $('#knob'); const R = 45; let pid = null;
@@ -1076,7 +1385,8 @@ function startSession() {
 function backToMenu() {
   closeModal(); closeChat(); disconnect();
   if (session) { Object.values(session.remotes).forEach(destroyPlayer); destroyPlayer(session.me); session = null; }
-  $('#enterBtn').style.display = 'none'; $('#hud').style.display = 'none'; $('#menu').style.display = 'flex'; renderMenu();
+  $('#enterBtn').style.display = 'none'; $('#eatBtn').style.display = 'none'; eatKey = ''; bk.inside = false; bk.k = 0; if (bk.proxy) bk.proxy.userData.off = false;
+  $('#hud').style.display = 'none'; $('#menu').style.display = 'flex'; renderMenu();
 }
 
 /* ============================================================
@@ -1087,7 +1397,7 @@ function openLoc(id) {
   if (modalOpen) return;
   modalOpen = true; target = null; pending = null; joy.on = false; $('#enterBtn').style.display = 'none'; nearLoc = null;
   modal.style.display = 'flex'; mbody.innerHTML = ''; mbody.scrollTop = 0;
-  ({ cafe: gCafe, bakery: gBakery, play: gPlay, pets: gPets, toys: gGames })[id]();
+  ({ cafe: gCafe, bakery: gBakery, play: gPlay, pets: gPets, toys: gGames, counter: gCounter })[id]();
 }
 function closeModal() { gameCleanup(); modalOpen = false; modal.style.display = 'none'; mbody.innerHTML = ''; if ('speechSynthesis' in window) speechSynthesis.cancel(); }
 modal.addEventListener('pointerdown', e => { if (e.target === modal) closeModal(); });
