@@ -1,5 +1,5 @@
 /* Orășelul Rania – service worker (aplicație instalabilă) */
-const VER = 'rania-v1';
+const VER = 'rania-v1-pets';
 const SHELL = ['./', './index.html', './3d.html', './manifest.webmanifest', './manifest-3d.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 const CDN = ['cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 
