@@ -1164,5 +1164,51 @@ function boot() {
 }
 Promise.race([document.fonts && document.fonts.load ? document.fonts.load('600 18px Fredoka') : Promise.resolve(), new Promise(r => setTimeout(r, 1500))]).then(boot, boot);
 </script>
+<script>
+/* AUTO-UPDATE: la fiecare versiune nouă schimb BUILD; jocul se blochează până se actualizează */
+(function () {
+  var BUILD = '2026-10-07.3';
+  if (!/^https?:/.test(location.protocol)) return;
+  var shown = false, ro = ((navigator.language || 'ro') + '').toLowerCase().indexOf('ro') === 0;
+  var TXT = ro ? { t: 'Avem o versiune nouă! 🎉', p: 'Ca să poți continua să joci, apasă butonul și jocul se actualizează.', b: '🔄 Actualizează acum', w: 'Se actualizează…' }
+               : { t: 'A new version is here! 🎉', p: 'To keep playing, tap the button and the game will update.', b: '🔄 Update now', w: 'Updating…' };
+  function reload() { location.replace(location.pathname + '?u=' + Date.now()); }
+  function update(btn) {
+    btn.disabled = true; btn.textContent = TXT.w;
+    var jobs = [];
+    try { if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.unregister(); })); })); } catch (e) {}
+    try { if (window.caches && caches.keys) jobs.push(caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); })); } catch (e) {}
+    Promise.all(jobs).then(reload, reload); setTimeout(reload, 4000);
+  }
+  function show() {
+    if (shown) return; shown = true;
+    var o = document.createElement('div');
+    o.id = 'updOverlay';
+    o.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:linear-gradient(#a8e0ff,#d9f3ff);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Fredoka,"Baloo 2",system-ui,sans-serif;touch-action:none';
+    o.innerHTML = '<div style="background:#fff;border-radius:28px;padding:28px 24px;max-width:420px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(45,42,74,.25);border:4px solid #2d2a4a">' +
+      '<div style="font-size:64px;line-height:1">🎁</div>' +
+      '<h2 style="margin:10px 0 6px;color:#2d2a4a;font-size:26px">' + TXT.t + '</h2>' +
+      '<p style="margin:0 0 18px;color:#4a4670;font-size:18px;line-height:1.35">' + TXT.p + '</p>' +
+      '<button id="updBtn" style="font:inherit;font-size:22px;font-weight:700;color:#fff;background:#ff7f6b;border:0;border-radius:18px;padding:14px 26px;cursor:pointer;box-shadow:0 5px 0 #d9604d">' + TXT.b + '</button></div>';
+    document.body.appendChild(o);
+    var btn = document.getElementById('updBtn'); btn.onclick = function () { update(btn); };
+    try { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); } catch (e) {}
+    ['keydown', 'keyup', 'keypress'].forEach(function (ev) { window.addEventListener(ev, function (e) { if (e.target !== btn) { e.stopPropagation(); e.preventDefault(); } }, true); });
+  }
+  var rx = new RegExp('var BUIL' + 'D = \'([^\']+)\'');
+  function check() {
+    if (shown) return;
+    try {
+      fetch(location.pathname + '?_=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (t) {
+        var m = rx.exec(t); if (m && m[1] !== BUILD) show();
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  window.__raniaCheck = check;
+  setTimeout(check, 1500); setInterval(check, 60000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
+  window.addEventListener('online', check); window.addEventListener('focus', check);
+})();
+</script>
 </body>
 </html>
